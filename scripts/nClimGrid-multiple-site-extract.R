@@ -4,7 +4,7 @@
 # Example used is extracting nClimGrid data for Karner Blue Butterly sites 
 # Adapted from extract-site-format-trends.R script from climate futures repo
 
-# Last update: Feb 22, 2022 by GJK 
+# Last update: Feb 24, 2022 by GJK 
 
 
 # This script extracts historical data from NOAA ClimGrid
