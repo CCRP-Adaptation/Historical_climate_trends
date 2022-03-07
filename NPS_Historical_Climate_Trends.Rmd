@@ -23,11 +23,24 @@ rm(list = ls())
 
 # -------------- Input site information -------------------------------------- #
 
-SiteID = "VALL" 
+SiteID = "ROMO" 
 centroid_county <- read.csv(here::here("centroid_county.csv"))
+BeginYr = 1895
+EndYr = 2021
 
 county_climate <- "Y"
 point_climate <- "N"
+
+doP1 <- "YES"  # Should a separate regression be calculated for the reference period (default 1900-1970)? 
+doP2 <- "YES"  # Should a separate regression be calculate for the period after the reference period (default 1971-present)? 
+beginRefYr = 1900
+endRefYr = 1970
+   # needed for rolling mean plot below.  
+stepYrs	= 10		  # for period plots 
+rollLen = 10      # period of calc for rolling average; default 10 = decadal
+dpi = 600 
+Lat = centroid_county$Lat[which(centroid_county$UNIT_CODE==SiteID)]
+Lon = centroid_county$Lon[which(centroid_county$UNIT_CODE==SiteID)]
 
 LocalDir <- "C:/Users/achildress/Documents/RCF_Testing/"
 OutDir = paste0(LocalDir,SiteID,"-Historical","/") # for .csv's
@@ -35,6 +48,23 @@ if(dir.exists(OutDir) == FALSE){
   dir.create(OutDir)
 }
 
+if(county_climate == "Y") {
+  OutDir = paste0(LocalDir,SiteID,"-Historical-County","/") # for .csv's
+if(dir.exists(OutDir) == FALSE){
+  dir.create(OutDir)
+}
+  source(here::here("scripts", "webscrape-county-nclim.R"), local = knitr::knit_global())
+} else {
+  DataDir <- "E:/nClimGrid_nc/"
+  OutDir = paste0(LocalDir,SiteID,"-Historical-",
+                  round(Lat,digits=4),"-",round(Lat,digits=4),"/") # for .csv's
+if(dir.exists(OutDir) == FALSE){
+  dir.create(OutDir)
+}
+  source(here::here("scripts", "nclim_nc_extraction.R"), local = knitr::knit_global()) #replace with nclim_nc_extraction script
+}
 
+
+source(here::here("scripts", "RSS PRISM plots v1.2.R"), local = knitr::knit_global()) # Requires
 
 ```
