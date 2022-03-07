@@ -42,6 +42,7 @@ dpi = 600
 Lat = centroid_county$Lat[which(centroid_county$UNIT_CODE==SiteID)]
 Lon = centroid_county$Lon[which(centroid_county$UNIT_CODE==SiteID)]
 
+DataDir <- "E:/nClimGrid_nc/"
 LocalDir <- "C:/Users/achildress/Documents/RCF_Testing/"
 OutDir = paste0(LocalDir,SiteID,"-Historical","/") # for .csv's
 if(dir.exists(OutDir) == FALSE){
@@ -55,7 +56,7 @@ if(dir.exists(OutDir) == FALSE){
 }
   source(here::here("scripts", "webscrape-county-nclim.R"), local = knitr::knit_global())
 } else {
-  DataDir <- "E:/nClimGrid_nc/"
+  
   OutDir = paste0(LocalDir,SiteID,"-Historical-",
                   round(Lat,digits=4),"-",round(Lat,digits=4),"/") # for .csv's
 if(dir.exists(OutDir) == FALSE){
