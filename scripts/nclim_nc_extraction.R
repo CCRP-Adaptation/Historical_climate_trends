@@ -3,7 +3,7 @@ library(dplyr)
 library(ggplot2) #for plotting
 library(units) # for dropping units
 library(tidyverse)
-library(starsdata)
+# library(starsdata)
 library(viridis)
 library(ncdf4)
 
