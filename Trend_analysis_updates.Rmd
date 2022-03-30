@@ -13,7 +13,7 @@ To date, CCRP has used linear regression and a p-values <0.05 as a cutoff for si
   * Bayesian regression
   * non-parametric alternatives
   
-**Notes from previous discussions:**
+## Notes from previous discussions:
 
 __From Joel__
 
