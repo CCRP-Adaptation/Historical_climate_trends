@@ -3,9 +3,82 @@ title: "Updating trend analysis"
 output: html_notebook
 ---
 
-This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+CCRP performs long-term temperature and precipitation trend analysis to demonstrate to parks that:
+1. The climate has changed; and
+2. Illustrate trends that have been occuring, rates of change, and draw out significant historical anomalies for comparison with climate futures.
 
-Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Ctrl+Shift+Enter*. 
+To date, CCRP has used linear regression and a p-values <0.05 as a cutoff for significant trends because these measures are simple to implement and clearly communicate. However, the simplicity can miss nuanced trends in climate change, so CCRP is investigating trade-offs in new methods for estimating trends.  Methods to consider include:
+  * splines (e.g., bsplines w/ k=2, k= 3)
+  * robust regressions lmrob()
+  * Bayesian regression
+  * non-parametric alternatives
+  
+**Notes from previous discussions:**
+
+__From Joel__
+
+  * season Mann-Kendall makes total sense for appropriate situations. I'm generally a big fan of non-parametrics and permutation-based methods. 
+
+  * there are likely other alternatives to overcoming the autocorrelation issue; a first step would be dig in a bit into the lit to see how robust the M-K is to autocorrelation - how strong of autocorr will blow up the M-K? Durbin-Watson is an extremely powerful test [very good at what it aims to do] and thus folks may be throwing the Baby out w/ the Bathwater, as they say.  
+
+  * Similarly, there are ways of structuring a bootstrap of the residuals to retain the autocorr & develop a permutation test appropriate even in its presence; not sure worth going there, though. 
+
+  * Thiel-Sen slope estimation is good solution; pretty standard, etc. 
+
+  * I do retain some interest in (?someday?) looking at potential tradeoffs (+s, -s) of just applying a standard off the shelf robust regression approach ('robust to highly influential points'). At this stage of the game, those are a more 'information conserving' approach than Thiel-Sen. Basically 1950s/60s technology (Thiel-Sen) vrs 1980s/90s technology (Robust Estimation Methods). 
+  
+_Maronna, R.; D. Martin; V. Yohai (2006). Robust Statistics: Theory and Methods. Wiley._
+
+__That said__,  it would be worth briefly thinking about whether or we have a couple known parks that could be good test cases to demonstrate the approaches & tradeoffs and ground folks understanding in something real. 
+
+_Topics / modifications to consider_
+
+Trend estimation goals & methods 
+
+  * Mean vs quantile regression (maybe ‘and’ rather than ‘vs’ and ‘when for each’?) 
+  * Robust regression (sensitivity/leverage issues?) 
+  * Frequentist [lm()] vs Bayesian 
+
+Methods for single site vs gridded  
+
+  * Should methods differ to make more feasible computationally? 
+    + Let's clarify the info products we are providing 
+ 
+Figures 
+
+  * Trend lines (solid/dashed) for single site ; maps with significant cells shaded  
+  * Standards for consistency in visual scale, where appropriate, across graphs of same unit (e.g., similar scale on figures of Tmean, Tmin, Tmax) 
+    + Considerations of keeping axis limits fixed across such combinations of graphs to enhance visual assessment of differences in trend magnitude, relative variation/uncertainty, timing of change points 
+  * Adding visual summary of uncertainties to trend estimates 
+
+Newer methods for analyzing climate data 
+  * [Link to IMD report](https://doimspp.sharepoint.com/sites/NPS-CCRP-FCScienceAdaptation/Shared%20Documents/RCF/Trend%20analysis/documents/Kittel%20T%202009%20Climate_Data_Analysis_Report.pdf?csf=1&web=1&e=hMD4z2&cid=47ff9869-0519-4963-8c49-553e18cc9ecb)
+
+Capturing seasonality 
+  * Trends 
+  * Changes in timing (?breakpoints?) 
+  * Accounting for different seasons regionally (I.e. MAM isn’t spring everywhere) 
+  * Figure improvement 
+ 
+What metrics would it be effective to shift from a ‘likely or not’ to a ‘how soon’ framing for summarizing and presenting? 
+
+Larry/Matt/others - lessons from climate change communication (Joel’s vague recollections from AGU ‘12 or ‘15 or such); CREDguide_full-res.pdf (columbia.edu)
+
+__From John__
+
+1. I think standard (i.e. frequentist) linear regression for climate trend analysis is weak. As a minimum, I suggest we use a Bayesian framework for the linear regression. If we make some of the same normality assumptions, then the conjugate distributions can be solved analytically so the computation is still simple. See attached. This has the dis-advantage of being slightly more difficult to explain, but the _huge_ advantage of avoiding stupid P-values and looking for the model the data most strongly support. 
+ 
+  * This sounds like a good idea and I would hope Joel could weigh in here in terms of the benefits of this approach relative to the costs of computing it. My Bayesian experience is limited (I took a couple of Tom's classes but never applied it in my own research) but I recall it being a fairly manual process so would want to make sure it's something we can automate. 
+
+2. I've observed interesting results using quantile regression, which has clearly shown that minimum temperatures are often increasing more rapidly than max, but that this also varies by season. I like the quantile regressions - the R code for doing a bunch of these at once, with user-defined quantiles, is in the NCDC stations code I recently sent you. 
+
+  * I'll take another look at the NCDC code because I also like quantile regressions.  
+
+3. There are a bunch of more robust and well-established statistical methods for analyzing climate data, which I don't think we've really looked into. Our analyses are very simple compared to serious climatology, but I suspect it would be worth a few hours investigation. I'll attach Tim Kittel's report that I&M commissioned a decade or so ago. It's probably a bit over the top but still useful. Thanks 
+
+4. I would find it informative to have better (clearer) information about seasonal trends/changes. The original box-plots are don't really work for me. No specific suggestion here - I've found this to be a hard one - just a note that I often feel like my evaluation of seasonal (vs annual) data is lacking and insufficient.  
+
+  * Completely agree. The seasonal changes often are the most important for management issues but our calculation of the seasons are not appropriate in all locations and don't account for changes in timing. Also the plots are just not very attractive. 
 
 ```{r}
 plot(cars)
