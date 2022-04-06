@@ -41,7 +41,9 @@ baseData <- df %>% mutate(PptIn = prcp/25.4,
                                 TminF = tmin * 9/5 + 32, 
                                 TavgF = (TmaxF+TminF)/2,
                                 YearMon = paste0(year(Date),sprintf("%02d",month(Date))),
-                                Season = GetSeason(Date))
+                                Season = GetSeason(Date)) %>% 
+  filter(Date <= paste0(EndYr,"-12-01"))
+
 rm(df,src)
 write.csv(baseData, (sprintf("%s%s_nClimGrid.csv", OutDir, SiteID)),row.names=FALSE)
 
