@@ -1,19 +1,6 @@
-library(stars)
-library(dplyr)
-library(ggplot2) #for plotting
-library(units) # for dropping units
-library(tidyverse)
-# library(starsdata)
-library(viridis)
-library(ncdf4)
+
 
 file.list = list.files(path = DataDir, pattern = '.nc', full.names = TRUE)
-
-df <- data.frame(lon =Lon, lat = Lat)
-coordinates(df) <- c("lon", "lat")
-proj4string(df) <- CRS("+init=epsg:4326") 
-df_sf <- st_as_sf(df)
-
 
 GetSeason <- function(DateVec){
   seas <- as.character(rep(NA, length(DateVec)))
