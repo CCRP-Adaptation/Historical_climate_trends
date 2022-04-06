@@ -23,7 +23,7 @@ rm(list = ls())
 
 # -------------- Input site information -------------------------------------- #
 
-SiteID = "ROMO" 
+SiteID = "PERI" 
 centroid_county <- read.csv(here::here("centroid_county.csv"))
 BeginYr = 1895
 EndYr = 2021
@@ -57,8 +57,7 @@ if(dir.exists(OutDir) == FALSE){
   source(here::here("scripts", "webscrape-county-nclim.R"), local = knitr::knit_global())
 } else {
   
-  OutDir = paste0(LocalDir,SiteID,"-Historical-",
-                  round(Lat,digits=4),"-",round(Lat,digits=4),"/") # for .csv's
+  OutDir = paste0(LocalDir,SiteID,"-Historical","/") # for .csv's
 if(dir.exists(OutDir) == FALSE){
   dir.create(OutDir)
 }
