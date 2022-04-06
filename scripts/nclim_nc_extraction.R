@@ -7,9 +7,6 @@ library(tidyverse)
 library(viridis)
 library(ncdf4)
 
-
-rm(list=ls())
-
 file.list = list.files(path = DataDir, pattern = '.nc', full.names = TRUE)
 
 df <- data.frame(lon =Lon, lat = Lat)
@@ -27,38 +24,25 @@ GetSeason <- function(DateVec){
   return(seas)
 }
 
-
-cropped_st <- list() # create list for cropped stars objects
-for(i in 1:length(file.list)){
-  suppressMessages(
-    l <- read_ncdf(file.list[i]) # need to read in as ncdf or coordinate system does not translate (not sure why)
-      )
-  nc_crop = st_extract(l, df_sf); rm(l)
-  cropped = nc_crop; rm(nc_crop)
-  cropped_st[[i]] <- st_as_stars(cropped); rm(cropped)
+# Using Tidync
+for (i in 1:length(file.list)){
+src <- tidync(file.list[i]) %>% 
+  hyper_filter(lat = lat <= c(Lat+0.05) & lat >= c(Lat-0.05)) %>% #subset to Lat/Lon
+  hyper_filter(lon = lon <= c(Lon +0.05) & lon >= c(Lon -0.05)) %>% #aggregate lat and lon
+  hyper_tibble() %>% 
+  mutate(Date = as.Date(time,origin = "1800-01-01")) %>% 
+  group_by(Date) %>% 
+  summarise_at(1,mean) 
+if (i == 1){df<-src} else {df<-merge(df,src,by="Date")}
 }
 
-gc()
-
-var_stars <- Reduce(c,cropped_st); rm(cropped_st)
-var_stars$prcp <- drop_units(var_stars$prcp)
-var_stars$tmax <- drop_units(var_stars$tmax)
-var_stars$tmin <- drop_units(var_stars$tmin)
-stars_df <- as.data.frame(var_stars)
-
-rm(var_stars)
-
-gc()
-stars_df$geometry <- NULL
-colnames(stars_df)[1] <- "Date"
-
-baseData <- stars_df %>% mutate(PptIn = prcp/25.4,
+baseData <- df %>% mutate(PptIn = prcp/25.4,
                                 TmaxF = tmax * 9/5 + 32,
                                 TminF = tmin * 9/5 + 32, 
                                 TavgF = (TmaxF+TminF)/2,
                                 YearMon = paste0(year(Date),sprintf("%02d",month(Date))),
                                 Season = GetSeason(Date))
-rm(stars_df)
+rm(df,src)
 write.csv(baseData, (sprintf("%s%s_nClimGrid.csv", OutDir, SiteID)),row.names=FALSE)
 
 
