@@ -283,7 +283,7 @@ colnames(lmTable) <- c("Var", "Period", "YrCoeff(degF(in)/100yrs)", "seSlope", "
 
 print(lmTable, row.names = F)
 
-write.csv(lmTable, paste0(OutDir, " Regression Table test.csv"), row.names=FALSE)
+write.csv(lmTable, paste0(OutDir, "Regression Table.csv"), row.names=FALSE)
 
 #-----------------------------------------------------------#
 #ANNUAL AVERAGE LINES WITH REGRESSION----
