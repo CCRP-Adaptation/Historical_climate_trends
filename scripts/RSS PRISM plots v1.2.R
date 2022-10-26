@@ -226,21 +226,21 @@ ggsave(OFName, width=6.5, height=8.5, dpi=dpi)
 
 ##########################
 #Regressions for trends----
-lmTmax <- lm(yrAvgs$tmaxAvg~cYr)
-lmTmaxP1 <- lm(yrAvgs$tmaxP1~cYr)
-lmTmaxP2 <- lm(yrAvgs$tmaxP2~cYr)
+lmTmax <- lmrob(yrAvgs$tmaxAvg~cYr)
+lmTmaxP1 <- lmrob(yrAvgs$tmaxP1~cYr)
+lmTmaxP2 <- lmrob(yrAvgs$tmaxP2~cYr)
 
-lmTmin <- lm(yrAvgs$tminAvg~cYr)
-lmTminP1 <- lm(yrAvgs$tminP1~cYr)
-lmTminP2 <- lm(yrAvgs$tminP2~cYr)
+lmTmin <- lmrob(yrAvgs$tminAvg~cYr)
+lmTminP1 <- lmrob(yrAvgs$tminP1~cYr)
+lmTminP2 <- lmrob(yrAvgs$tminP2~cYr)
 
-lmTmean <- lm(yrAvgs$tmeanAvg~cYr)
-lmTmeanP1 <- lm(yrAvgs$tmeanP1~cYr)
-lmTmeanP2 <- lm(yrAvgs$tmeanP2~cYr)
+lmTmean <- lmrob(yrAvgs$tmeanAvg~cYr)
+lmTmeanP1 <- lmrob(yrAvgs$tmeanP1~cYr)
+lmTmeanP2 <- lmrob(yrAvgs$tmeanP2~cYr)
 
-lmPpt  <- lm(yrAvgs$pptAvg~cYr)		
-lmPptP1 <- lm(yrAvgs$pptP1~cYr)		
-lmPptP2 <- lm(yrAvgs$pptP2~cYr)		
+lmPpt  <- lmrob(yrAvgs$pptAvg~cYr)		
+lmPptP1 <- lmrob(yrAvgs$pptP1~cYr)		
+lmPptP2 <- lmrob(yrAvgs$pptP2~cYr)		
 
 # make table of coefficients
 probStar <- function(pVal){
@@ -285,6 +285,12 @@ print(lmTable, row.names = F)
 
 write.csv(lmTable, paste0(OutDir, "Regression Table.csv"), row.names=FALSE)
 write.csv(yrAvgs, paste0(OutDir, "Annual-Averages.csv"),row.names=FALSE)
+
+
+######## Robust regression ####
+
+
+####### Identify anomalies ####
 
 #-----------------------------------------------------------#
 #ANNUAL AVERAGE LINES WITH REGRESSION----
