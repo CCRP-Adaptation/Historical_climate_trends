@@ -222,7 +222,7 @@ p3 = add_sub(p2, paste("Gray shaded area around regression lines = standard erro
 ggdraw(p3)
 
 OFName = paste0(OutDir, PlotName,".png")
-ggsave(OFName, width=6.5, height=8.5, dpi=dpi)
+ggsave(OFName, width=6.5, height=8.5, dpi=dpi,bg="white")
 
 ##########################
 #Regressions for trends----
@@ -286,11 +286,6 @@ print(lmTable, row.names = F)
 write.csv(lmTable, paste0(OutDir, "Regression Table.csv"), row.names=FALSE)
 write.csv(yrAvgs, paste0(OutDir, "Annual-Averages.csv"),row.names=FALSE)
 
-
-######## Robust regression ####
-
-
-####### Identify anomalies ####
 
 #-----------------------------------------------------------#
 #ANNUAL AVERAGE LINES WITH REGRESSION----
@@ -367,8 +362,6 @@ if(doP2 == "YES")d <- d + geom_smooth(method = lm, aes(cYr, pptP2), na.rm=TRUE,l
   1
 } else{2}) 
 
-rm(lmPpt,lmPptP1,lmPptP2,lmTmax,lmTmaxP1,lmTmaxP2,lmTmin,lmTminP1,lmTminP2,lmTmean,lmTmeanP1,lmTmeanP2)
-rm(regsTmax, regsTmin, regsTmean, regsPpt, lmTable)
 
 #4-panel plot		
 p1 = plot_grid(a, b, c, d, nrow=4, align="v")
@@ -380,7 +373,7 @@ p3 = add_sub(p2, paste("Gray shaded area around regression lines = standard erro
 ggdraw(p3)
 
 OFName <- paste0(OutDir, PlotName, " 4-panel.png")
-ggsave(OFName, width=6.5, height=8.5, dpi=dpi)
+ggsave(OFName, width=6.5, height=8.5, dpi=dpi,bg="white")
 
 #2-panel Tmax/Tmin plot
 p1 = plot_grid(a, b, nrow=2, align="v")
@@ -390,7 +383,7 @@ p3 = add_sub(p2, paste("Gray shaded area around regression lines = standard erro
 ggdraw(p3)
 
 OFName <- paste0(OutDir, PlotName, " Tmin Tmax.png")
-ggsave(OFName, width=6.5, height=6.5, dpi=dpi)
+ggsave(OFName, width=6.5, height=6.5, dpi=dpi,bg="white")
 
 #2-panel Tmean/Precip plot
 p1 = plot_grid(c, d, nrow=2, align="v")
@@ -400,8 +393,75 @@ p3 = add_sub(p2, paste("Gray shaded area around regression lines = standard erro
 ggdraw(p3)
 
 OFName <- paste0(OutDir, PlotName, " Tmean Precip.png")
-ggsave(OFName, width=6.5, height=6.5, dpi=dpi)
+ggsave(OFName, width=6.5, height=6.5, dpi=dpi,bg="white")
 
+
+####### Identify anomalies ####
+
+hist.tmean.98th <- quantile(yrAvgs$tmeanAvg[which(yrAvgs$cYr < 1995)], .98)
+hist.anomalies.tmean <- yrAvgs$cYr[which(yrAvgs$tmeanAvg > hist.tmean.98th & yrAvgs$cYr < 1995)] # Anomaly years, above 98th
+recent.percent.tmean.anomaly <- length(yrAvgs$cYr[which(yrAvgs$tmeanAvg > hist.tmean.98th & yrAvgs$cYr > 2000)])/
+  length(yrAvgs$cYr[which(yrAvgs$cYr > 2000)]) * 100 # Percent recent years above hist 98th
+
+hist.above.prcp.98th <- quantile(yrAvgs$pptAvg[which(yrAvgs$cYr < 1995)], .98)
+hist.anomalies.above.prcp <- yrAvgs$cYr[which(yrAvgs$pptAvg > hist.above.prcp.98th & yrAvgs$cYr < 1995)] # Anomaly years, above 98th
+recent.percent.above.prcp.anomaly <- length(yrAvgs$cYr[which(yrAvgs$pptAvg > hist.above.prcp.98th & yrAvgs$cYr > 2000)])/
+  length(yrAvgs$cYr[which(yrAvgs$cYr > 2000)]) * 100 # Percent recent years above hist 98th
+
+hist.below.prcp.98th <- quantile(yrAvgs$pptAvg[which(yrAvgs$cYr < 1995)], .02)
+hist.anomalies.below.prcp <- yrAvgs$cYr[which(yrAvgs$pptAvg < hist.below.prcp.98th & yrAvgs$cYr < 1995)] # Anomaly years, above 98th
+recent.percent.below.prcp.anomaly <- length(yrAvgs$cYr[which(yrAvgs$pptAvg < hist.below.prcp.98th & yrAvgs$cYr > 2000)])/
+  length(yrAvgs$cYr[which(yrAvgs$cYr > 2000)]) * 100 # Percent recent years above hist 98th
+
+anomalies.table <- data.frame(hist.tmean.98th,hist.anomalies.tmean,recent.percent.tmean.anomaly,hist.above.prcp.98th,hist.anomalies.above.prcp, recent.percent.above.prcp.anomaly,
+           hist.below.prcp.98th,hist.anomalies.below.prcp,recent.percent.below.prcp.anomaly)
+write.csv(anomalies.table, paste0(OutDir, "Anomalies-table.csv"),row.names=FALSE)
+
+# Plot tmean and precip w/ anomalies
+c <- ggplot(data=yrAvgs) + geom_line(aes(cYr, tmeanAvg), na.rm=TRUE) + geom_point(aes(cYr, tmeanAvg), na.rm=TRUE) +
+  ylab(expression(paste(Tmean, ~({}^o*F)))) + xlab("") +
+  # geom_text(aes(x=1895, y= 13.5, label = "B")) +
+  geom_smooth(aes(cYr, tmeanAvg), method="lm", na.rm=TRUE,linetype=if(summary(lmTmean)$coefficients[2,4]<0.05) {
+    1
+  } else{2}) +
+  scale_x_continuous(breaks=c(1900, 1920, 1940, 1960, 1980, 2000)) +
+  geom_smooth(method = lm, aes(cYr, tmeanP1), na.rm=TRUE,linetype=if(summary(lmTmeanP1)$coefficients[2,4]<0.05) {
+  1
+} else{2}) +
+  geom_smooth(method = lm, aes(cYr, tmeanP2), na.rm=TRUE,linetype=if(summary(lmTmeanP2)$coefficients[2,4]<0.05) {
+  1
+} else{2}) +
+  if(recent.percent.tmean.anomaly > 33) {
+    geom_point(data = subset(yrAvgs, cYr %in% hist.anomalies.tmean),aes(x=cYr, y=tmeanAvg), shape=21, size=10, stroke=3, colour="brown") 
+  }
+  # if(recent.percent.tmean.anomaly > 33)
+
+d <- ggplot(data=yrAvgs) + geom_line(aes(cYr, pptAvg), na.rm=TRUE) + geom_point(aes(cYr, pptAvg), na.rm=TRUE) +
+  ylab("Precip (in/yr)") + xlab("") +
+  # geom_text(aes(x=1895, y=350, label = "C")) +
+  geom_smooth(aes(cYr, pptAvg), method="lm", na.rm=TRUE,linetype=if(summary(lmPpt)$coefficients[2,4]<0.05) {
+    1
+  } else{2}) +
+  scale_x_continuous(breaks=c(1900, 1920, 1940, 1960, 1980, 2000)) +
+  geom_smooth(method = lm, aes(cYr, pptP1), na.rm=TRUE,linetype=if(summary(lmPptP1)$coefficients[2,4]<0.05) {
+  1
+} else{2}) +
+  geom_smooth(method = lm, aes(cYr, pptP2), na.rm=TRUE,linetype=if(summary(lmPptP2)$coefficients[2,4]<0.05) {
+  1
+} else{2}) 
+
+g <- grid.arrange(c,d,nrow=2)
+figure <- ggarrange(c + rremove("xlab") + rremove("x.text"), d, # remove axis labels from plots
+                    labels = NULL,
+                    nrow = 2)
+
+annotate_figure(figure, top = textGrob(paste0("Historical trends for ",SiteID), vjust = 1, gp = gpar(cex = 2)))
+
+ggsave(paste0(OutDir, "Tmean-Prcp-AnnualMeans+Anomlies.png"), height=6.5, width=6.5, dpi=dpi,bg="white")
+
+
+rm(lmPpt,lmPptP1,lmPptP2,lmTmax,lmTmaxP1,lmTmaxP2,lmTmin,lmTminP1,lmTminP2,lmTmean,lmTmeanP1,lmTmeanP2)
+rm(regsTmax, regsTmin, regsTmean, regsPpt, lmTable)
 
 #Decadal PLOTS by "step" and season----
 
@@ -518,7 +578,7 @@ p3 = add_sub(p2, paste("Anomaly = (Mean decadal value) - (mean of all decades) \
 ggdraw(p3)
 
 OFName <- paste0(OutDir, PlotName,".png")
-ggsave(OFName, width=6.5, height=8.5, dpi=dpi)
+ggsave(OFName, width=6.5, height=8.5, dpi=dpi,bg="white")
 
 
 
@@ -585,7 +645,7 @@ p3 = add_sub(p2, paste("Anomaly = (Mean annual value) - (mean of all years) \n D
 ggdraw(p3)
 
 OFName <- paste0(OutDir, PlotName,".png")
-ggsave(OFName, width=8, height=6, dpi=dpi)
+ggsave(OFName, width=8, height=6, dpi=dpi,bg="white")
 
 PlotName <- "Seas Decadal Tmean Ppt Anomaly Box"
 p1 = plot_grid(c, d, nrow=2, align="v")
@@ -597,7 +657,7 @@ p3 = add_sub(p2, paste("Anomaly = (Mean annual value) - (Mean of all years) \n D
 ggdraw(p3)
 
 OFName <- paste0(OutDir, PlotName,".png")
-ggsave(OFName, width=8, height=6, dpi=dpi)
+ggsave(OFName, width=8, height=6, dpi=dpi,bg="white")
 
 	
 
@@ -636,7 +696,7 @@ p2 = plot_grid(title, p1, ncol=1, rel_heights = c(0.05, 1))
 p3 = add_sub(p2, paste("Decadal ranges = ", stepYrs, "-year steps from ", BeginYr, " to ", max(tmaxDecadeSeasons$Decade+4), sep=""), y=0.5, hjust=0.5, size=12)
 ggdraw(p3)
 OFName = paste0(OutDir, PlotName,".png")
-ggsave(OFName, width=8.5, height=8.5)
+ggsave(OFName, width=8.5, height=8.5,bg="white")
 
 
 		####  Period (e.g. decadal) averages for all seasons  #####
@@ -652,7 +712,7 @@ p1 = ggplot(tmaxDecadeSeasons, aes(x=as.character(Decade), y=Var, fill=Season)) 
 p2 = add_sub(p1, paste("Anomaly = (Mean annual value) - (Mean of all years) \n Decadal ranges = ", stepYrs, "-year steps from ", BeginYr, " to ", max(tmaxDecadeSeasons$Decade+4), sep=""), y=0.5, hjust=0.5, size=12)
 ggdraw(p2)
 OFName = paste0(OutDir, PlotName,  ".png")
-ggsave(OFName, width=8.5, height=8.5)
+ggsave(OFName, width=8.5, height=8.5,bg="white")
 
 PlotName = "Decadal Seasonal Tmin Box"
 p1 = ggplot(tminDecadeSeasons, aes(x=as.character(Decade), y=Var, fill=Season)) + geom_boxplot() +
@@ -664,7 +724,7 @@ p1 = ggplot(tminDecadeSeasons, aes(x=as.character(Decade), y=Var, fill=Season)) 
 p2 = add_sub(p1, paste("Anomaly = (Mean annual value) - (Mean of all years) \n Decadal ranges = ", stepYrs, "-year steps from ", BeginYr, " to ", max(tmaxDecadeSeasons$Decade+4), sep=""), y=0.5, hjust=0.5, size=12)
 ggdraw(p2)
 OFName = paste0(OutDir, PlotName,".png")
-ggsave(OFName, width=8.5, height=8.5)
+ggsave(OFName, width=8.5, height=8.5,bg="white")
 
 PlotName = "Decadal Seasonal Tmean Box"
 p1 = ggplot(tmeanDecadeSeasons, aes(x=as.character(Decade), y=Var, fill=Season)) + geom_boxplot() +
@@ -676,7 +736,7 @@ p1 = ggplot(tmeanDecadeSeasons, aes(x=as.character(Decade), y=Var, fill=Season))
 p2 = add_sub(p1, paste("Anomaly = (Mean annual value) - (Mean of all years) \n Decadal ranges = ", stepYrs, "-year steps from ", BeginYr, " to ", max(tmaxDecadeSeasons$Decade+4), sep=""), y=0.5, hjust=0.5, size=12)
 ggdraw(p2)
 OFName = paste0(OutDir, PlotName,".png")
-ggsave(OFName, width=8.5, height=8.5)
+ggsave(OFName, width=8.5, height=8.5,bg="white")
 
 PlotName = "Decadal Seasonal Ppt Box"
 p1 = ggplot(pptDecadeSeasons, aes(x=as.character(Decade), y=Var, fill=Season)) + geom_boxplot() +
@@ -688,7 +748,7 @@ p1 = ggplot(pptDecadeSeasons, aes(x=as.character(Decade), y=Var, fill=Season)) +
 p2 = add_sub(p1, paste("Anomaly = (Mean annual value) - (Mean of all years) \n Decadal ranges = ", stepYrs, "-year steps from ", BeginYr, " to ", max(tmaxDecadeSeasons$Decade+4), sep=""), y=0.5, hjust=0.5, size=12)
 ggdraw(p2)
 OFName = paste0(OutDir, PlotName,".png")
-ggsave(OFName, width=8.5, height=8.5)
+ggsave(OFName, width=8.5, height=8.5,bg="white")
 
 
 #--------------------------------------------------------------------------#
@@ -752,7 +812,7 @@ p2 = plot_grid(title, p1, ncol=1, rel_heights = c(0.05, 1))
 p3 = add_sub(p2, paste("Anomaly = (Annual value) - (Mean of all years) \nData range = ", BeginYr, "-", EndYr, sep=""), y=0.5, hjust=0.5, size=12)
 ggdraw(p3)
 OFName <- paste0(OutDir, PlotName,".png")
-ggsave(OFName, width=6.5, height=8.5)
+ggsave(OFName, width=6.5, height=8.5,bg="white")
 
 #-------------------------------------------------#
 #Decadal barplots----
@@ -785,7 +845,7 @@ ggplot(DecDat, aes(x=decade, y=Atmax, fill=Atmax.col)) +
   labs(title="Average Decadal Max Temperature Climate Anomaly",x="", y=expression(paste("Tmax (", degree*F,")", sep=""))) + 
   scale_x_continuous(breaks=c(1900, 1920, 1940, 1960, 1980, 2000)) 
 
-ggsave(paste(PLOT,"Tmax.png",sep=""), path = OutDir, width = 15, height = 9)
+ggsave(paste(PLOT,"Tmax.png",sep=""), path = OutDir, width = 15, height = 9,bg="white")
 
 #Tmin
 ggplot(DecDat, aes(x=decade, y=Atmin, fill=Atmin.col)) +
@@ -793,7 +853,7 @@ ggplot(DecDat, aes(x=decade, y=Atmin, fill=Atmin.col)) +
   scale_fill_manual(values=c("blue", "red")) +
   labs(title="Average Decadal Min Temperature Climate Anomaly",x="", y=expression(paste("Tmin (", degree*F,")", sep=""))) +  
   scale_x_continuous(breaks=c(1900, 1920, 1940, 1960, 1980, 2000))
-ggsave(paste(PLOT,"Tmin.png",sep=""), path = OutDir, width = 15, height = 9)
+ggsave(paste(PLOT,"Tmin.png",sep=""), path = OutDir, width = 15, height = 9,bg="white")
 
 #Tmean 
 ggplot(DecDat, aes(x=decade, y=Atmean, fill=Atmean.col)) +
@@ -801,7 +861,7 @@ ggplot(DecDat, aes(x=decade, y=Atmean, fill=Atmean.col)) +
   scale_fill_manual(values=c("blue", "red")) +
   labs(title="Average Decadal Mean Temperature Climate Anomaly",x="", y=expression(paste("Tmean (", degree*F,")", sep=""))) +
   scale_x_continuous(breaks=c(1900, 1920, 1940, 1960, 1980, 2000))
-ggsave(paste(PLOT,"Tmean.png",sep=""), path = OutDir, width = 15, height = 9)
+ggsave(paste(PLOT,"Tmean.png",sep=""), path = OutDir, width = 15, height = 9,bg="white")
 
 #Precip
 ggplot(DecDat, aes(x=decade, y=Appt, fill=Appt.col)) + 
@@ -809,7 +869,7 @@ ggplot(DecDat, aes(x=decade, y=Appt, fill=Appt.col)) +
   scale_fill_manual(values=c("brown", "dark green")) +
   labs(title="Average Decadal Annual Precipitation Climate Anomaly",x="", y="Precip (in/yr)") +
   scale_x_continuous(breaks=c(1900, 1920, 1940, 1960, 1980, 2000))
-ggsave(paste(PLOT,"Ppt.png",sep=""), path = OutDir, width = 15, height = 9)
+ggsave(paste(PLOT,"Ppt.png",sep=""), path = OutDir, width = 15, height = 9,bg="white")
 
 
 #SPEI calculations----
@@ -839,7 +899,7 @@ ggplot(data = spei, aes(x = date, y = SPEI,fill = col)) +
        x = "Date", y = "SPEI") +
   guides(color=guide_legend(override.aes = list(size=7))) + 
   scale_y_continuous(limits=c(min(spei$SPEI)-.5, max(spei$SPEI)+1)) #warning message that 11 rows are removed will occur due to the rolling mean, ignore warning
-ggsave("Historical SPEI.png", path = OutDir, width = 15, height = 9)
+ggsave("Historical SPEI.png", path = OutDir, width = 15, height = 9,bg="white")
 
 spei$decade <- spei$yr - spei$yr %% 10
 spei.decade <- spei %>% group_by(decade) %>% summarise(SPEI=mean(SPEI))
@@ -859,7 +919,7 @@ ggplot(data = spei.decade, aes(x = decade, y = SPEI,fill = col)) +
        x = "Date", y = "SPEI") +
   guides(color=guide_legend(override.aes = list(size=7))) + 
   scale_y_continuous(limits=c(min(spei$SPEI)-.5, max(spei$SPEI)+1)) #warning message that 11 rows are removed will occur due to the rolling mean, ignore warning
-ggsave("Decadal SPEI.png", path = OutDir, width = 15, height = 9)
+ggsave("Decadal SPEI.png", path = OutDir, width = 15, height = 9,bg="white")
 ### EOF ###
 ###########
 
