@@ -460,9 +460,6 @@ annotate_figure(figure, top = textGrob(paste0("Historical trends for ",SiteID), 
 ggsave(paste0(OutDir, "Tmean-Prcp-AnnualMeans+Anomlies.png"), height=6.5, width=6.5, dpi=dpi,bg="white")
 
 
-rm(lmPpt,lmPptP1,lmPptP2,lmTmax,lmTmaxP1,lmTmaxP2,lmTmin,lmTminP1,lmTminP2,lmTmean,lmTmeanP1,lmTmeanP2)
-rm(regsTmax, regsTmin, regsTmean, regsPpt, lmTable)
-
 #Decadal PLOTS by "step" and season----
 
 
