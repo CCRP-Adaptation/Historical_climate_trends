@@ -22,10 +22,10 @@ rm(list = ls())
 
 # -------------- Input site information -------------------------------------- #
 
-SiteID = "WHSA" 
+SiteID = "YUHO" 
 centroid_county <- read.csv(here::here("centroid_county.csv"))
 BeginYr = 1895
-EndYr = 2021
+EndYr = 2022
 
 county_climate <- "N"
 point_climate <- "Y"
@@ -41,7 +41,8 @@ dpi = 600
 Lat = centroid_county$Lat[which(centroid_county$UNIT_CODE==SiteID)]
 Lon = centroid_county$Lon[which(centroid_county$UNIT_CODE==SiteID)]
 
-DataDir <- "E:/nClimGrid_nc/"
+# DataDir <- "E:/nClimGrid_nc/"
+DataDir <- "C:/Users/achildress/Documents/NOAA-data/nclim_2302/"
 LocalDir <- "C:/Users/achildress/Documents/RCF_Testing/"
 
 if(county_climate == "Y") {
