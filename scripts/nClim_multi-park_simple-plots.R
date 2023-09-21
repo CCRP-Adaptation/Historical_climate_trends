@@ -1,3 +1,10 @@
+
+library(here); library(plyr); # Use here::here when package lubridate is used
+library(plotrix); library(zoo); library(ggplot2); library(grid); library(cowplot); library(reshape2); library(raster); library(ncdf4); library(reshape2); library(WriteXLS); library(data.table); library(RColorBrewer); library(ggrepel); library(lubridate); library(dplyr); library(forcats); library(openxlsx); library(sf); library(raster); library(rgdal); library(R.utils); library(tmap); library(tmaptools); library(ggmap); library(ggspatial);
+library(gridExtra); library(SPEI); library(tidyr); library(tibble); library(sp); library(skimr); library(cft); library(stringr); library(ggpubr); library(lemon);library(rvest);library(tidyverse);library(XML);library(xml2);library(curl);library(tidync); library(viridis); library(robustbase)
+library(terra) #https://tmieno2.github.io/R-as-GIS-for-Economists/extracting-values-from-raster-layers-for-vector-data.html
+rm(list=ls())
+
 SiteID = c("CAVE","GUMO") 
 
 centroid_county <- read.csv(here::here("centroid_county.csv"))
@@ -20,44 +27,41 @@ Lon = centroid_county$Lon[which(centroid_county$UNIT_CODE %in% SiteID)]
 
 # DataDir <- "E:/nClimGrid_nc/"
 DataDir <- "C:/Users/arunyon/3D Objects/Local-files/NOAA-data/nclim_2302/"
-LocalDir <- "C:/Users/arunyon/3D Objects/Local-files/RCF_Testing/"
+LocalDir <- "C:/Users/arunyon/3D Objects/Local-files/RCF_Testing/multi-park-historical/"
 
 nps_centroids <- st_read('C:/Users/arunyon/3D Objects/Local-files/Git-repos/CCRP_automated_climate_futures/data/general/spatial-data/nps_boundary_centroids/nps_boundary_centroids.shp')
 centroid <- filter(nps_centroids, UNIT_CODE %in% SiteID)
 centroid <- centroid[1]
 
-
 file.list = list.files(path = DataDir, pattern = '.nc', full.names = TRUE)
-file.list = file.list[1]
+file.list = file.list[1:2] # just prcp and tavg
 
-library(terra) #https://tmieno2.github.io/R-as-GIS-for-Economists/extracting-values-from-raster-layers-for-vector-data.html
-t1 = terra::rast(file.list)
-dim(t1)
-plot(t1[[1]])
-t2 <- terra::extract(t1, centroid, xy = T, method = "simple")
-t3<-terra::extract(t1, vect(centroid))
-t3$ID <- centroid$UNIT_CODE
-t<-t3
-colnames(t)[2:length(t)] = as.character(time(t1))
-t<- t |> pivot_longer(!ID, names_to = "Date", values_to = substr(file.list, 72, 75))
-substr(file.list, 72, 75)
+nc.data <- data.frame()
+for (i in 1:length(file.list)){
+raster.obj = terra::rast(file.list[i])
+raster.extract<-terra::extract(raster.obj, vect(centroid))
+raster.extract$ID <- centroid$UNIT_CODE
+colnames(raster.extract)[2:length(raster.extract)] = as.character(time(raster.obj))
+raster.extract <- raster.extract |> 
+  pivot_longer(!ID, names_to = "Date", values_to = substr(file.list[i], 72, 75)) #numbers correspond with vector length, if filename changes need to update
+if(i==1){nc.data=raster.extract} else{nc.data=left_join(nc.data,raster.extract,by=c("ID","Date"))}
+}
 
-baseData <- df %>% mutate(PptIn = prcp/25.4,
-                          TmaxF = tmax * 9/5 + 32,
-                          TminF = tmin * 9/5 + 32, 
-                          TavgF = (TmaxF+TminF)/2,
+baseData <- nc.data %>% mutate(PptIn = prcp/25.4,
+                          # TmaxF = tmax * 9/5 + 32,
+                          # TminF = tmin * 9/5 + 32, 
+                          TavgF = tavg * 9/5 + 32,
+                          Date = as.Date(Date,format="%Y-%m-%d"),
                           YearMon = paste0(year(Date),sprintf("%02d",month(Date))),
-                          Season = GetSeason(Date)) %>% 
+                          Year = as.integer(format(Date,format="%Y"))) %>% 
   filter(Date <= paste0(EndYr,"-12-01"))
+write.csv(baseData,paste0(LocalDir,"historical.centroids.csv"),row.names=F)
 
-baseData <- t |> mutate(PptIn = prcp/25.4,
-                        Date = as.Date(Date,format="%Y-%m-%d"),
-                        Year = format(Date,format="%Y"),
-                        Month = format(Date,format="%m"))
-
-Annual = aggregate(PptIn~ID+Year,baseData,sum)
-Annual$Year <- as.Date(Annual$Year,format="%Y")
-
+Annual = baseData |> group_by(ID,Year) |> summarise(PptIn = sum(PptIn),
+                                                    TavgF = mean(TavgF))
+Annual$PptP2 <- ifelse(Annual$Year>=endRefYr, Annual$PptIn, NA)
+Annual$TavgP2  <- ifelse(Annual$Year>=endRefYr, Annual$TavgF, NA)
+# Annual$Year <- Date(Annual$Year,format="%Y")
 
 #### Basic plot
 # Take out the fuzzy gray error bar shading for the blue lines.
@@ -89,14 +93,12 @@ TitleSize = theme_get()$plot.title$size  ##Needed for cowplot layouts
 # lmTmin <- lmrob(yrAvgs$tminAvg~cYr)
 # lmTminP1 <- lmrob(yrAvgs$tminP1~cYr)
 # lmTminP2 <- lmrob(yrAvgs$tminP2~cYr)
-# 
-# lmTmean <- lmrob(yrAvgs$tmeanAvg~cYr)
-# lmTmeanP1 <- lmrob(yrAvgs$tmeanP1~cYr)
-# lmTmeanP2 <- lmrob(yrAvgs$tmeanP2~cYr)
 
-lmPpt  <- lm(PptIn~Year,Annual)		
-lmPptP1 <- lmrob(yrAvgs$pptP1~cYr)		
-lmPptP2 <- lmrob(yrAvgs$pptP2~cYr)		
+lmTmean <- lmrob(TavgF~Year,Annual)
+lmTmeanP2 <- lmrob(TavgP2~Year,Annual)
+
+lmPpt  <- lmrob(PptIn~Year,Annual)		
+lmPptP2 <- lmrob(PptP2~Year,Annual)		
 
 # make table of coefficients
 probStar <- function(pVal){
@@ -120,17 +122,16 @@ lmMetrics <- function(lmout){
   data.frame(YrCoeff,seSlope,probCoeff, probSign, r2)
 }
 
-regsTmax <-  rbind(lmMetrics(lmTmax), lmMetrics(lmTmaxP1), lmMetrics(lmTmaxP2))
-regsTmin <-  rbind(lmMetrics(lmTmin), lmMetrics(lmTminP1), lmMetrics(lmTminP2))
-regsTmean <- rbind(lmMetrics(lmTmean),lmMetrics(lmTmeanP1),lmMetrics(lmTmeanP2))
-regsPpt <-   rbind(lmMetrics(lmPpt),  lmMetrics(lmPptP1),  lmMetrics(lmPptP2))
+# regsTmax <-  rbind(lmMetrics(lmTmax), lmMetrics(lmTmaxP1), lmMetrics(lmTmaxP2))
+# regsTmin <-  rbind(lmMetrics(lmTmin), lmMetrics(lmTminP1), lmMetrics(lmTminP2))
+regsTmean <- rbind(lmMetrics(lmTmean),lmMetrics(lmTmeanP2))
+regsPpt <-   rbind(lmMetrics(lmPpt),lmMetrics(lmPptP2))
 
-perAll <- paste(min(yrAvgs$cYr), max(yrAvgs$cYr), sep="-")
-per1 <- paste(p1_start, p1_end, sep="-")
-per2 <- paste(p2_start, p2_end, sep="-")
-Period <- rep(c(perAll, per1, per2), 4)
+perAll <- paste(min(Annual$Year), max(Annual$Year), sep="-")
+per2 <- paste(endRefYr, max(Annual$Year), sep="-")
+Period <- rep(c(perAll, per2), 2)
 
-lmTable <- cbind( Var=rep(c("Tmax", "Tmin", "Tmean", "Precip"),each=3), Period, rbind(regsTmax, regsTmin, regsTmean, regsPpt))
+lmTable <- cbind( Var=rep(c("Tmean", "Precip"),each=2), Period, rbind(regsTmean, regsPpt))
 
 lmTable$YrCoeff <- lmTable$YrCoeff * 100   # convert to degF(in)/100-yrs
 lmTable$seSlope <- lmTable$seSlope * 100
@@ -139,8 +140,45 @@ colnames(lmTable) <- c("Var", "Period", "YrCoeff(degF(in)/100yrs)", "seSlope", "
 
 print(lmTable, row.names = F)
 
-write.csv(lmTable, paste0(OutDir, "Regression Table.csv"), row.names=FALSE)
-write.csv(yrAvgs, paste0(OutDir, "Annual-Averages.csv"),row.names=FALSE)
+write.csv(lmTable, paste0(LocalDir, "Regression Table.csv"), row.names=FALSE)
+write.csv(Annual, paste0(LocalDir, "Annual-Averages.csv"),row.names=FALSE)
 
+PlotName = "Annual Means Lines Regressions"
+for(i in 1:length(SiteID)){
+a <- Annual |> filter(ID==SiteID[i]) |> 
+  ggplot() + geom_line(aes(Year, TavgF), na.rm=TRUE) + geom_point(aes(Year, TavgF), na.rm=TRUE) +
+  ylab(expression(paste("Avg Temperature", ~({}^o*F)))) + xlab("") +
+  # geom_text(aes(x=1895, y= 13.5, label = "B")) +
+  geom_smooth(aes(Year, TavgF),se=F, method="lm", na.rm=TRUE,linetype=if(summary(lmTmean)$coefficients[2,4]<0.05) {
+    1
+  } else{2}) +
+  # geom_line(aes(Year, rTmean), colour = 'brown', size=1) +
+  scale_x_continuous(breaks=c(1900, 1920, 1940, 1960, 1980, 2000, 2020)) +
+  geom_smooth(method = lm,se=F, aes(Year, TavgP2), na.rm=TRUE,colour="brown",linetype=if(summary(lmTmeanP2)$coefficients[2,4]<0.05){
+    1
+  } else{2}) 
+ 
+b <- Annual |> filter(ID==SiteID[i]) |> 
+  ggplot() + geom_line(aes(Year, PptIn), na.rm=TRUE) + geom_point(aes(Year, PptIn), na.rm=TRUE) +
+  ylab("Precip (in/yr)") + xlab("") +
+  # geom_text(aes(x=1895, y=350, label = "C")) +
+  geom_smooth(aes(Year, PptIn),se=F, method="lm", na.rm=TRUE,linetype=if(summary(lmPpt)$coefficients[2,4]<0.05) {
+    1
+  } else{2}) +
+  # geom_line(aes(cYr, rPpt), colour = 'brown', size=1) +
+  scale_x_continuous(breaks=c(1900, 1920, 1940, 1960, 1980, 2000, 2020)) +
+geom_smooth(method = lm,se=F,aes(Year, PptP2), na.rm=TRUE,colour="brown",linetype=if(summary(lmPptP2)$coefficients[2,4]<0.05) {
+  1
+} else{2}) 
 
+title = ggdraw() + draw_label(paste(SiteID[i], " - Trends for Reference and Recent Historical Periods", sep=""), 
+                              fontface="bold", size=TitleSize, vjust=0.5)
+p1 = plot_grid(a, b, nrow=2, align="v")
+p2 = plot_grid(title, p1, ncol=1, rel_heights = c(0.1, 1, 0.05)) 
+# p3 = add_sub(p2, paste("Gray shaded area around regression lines = standard error of predicted y's \nReference period: ", beginRefYr, "-", endRefYr, "; Recent period: ", endRefYr+1, "-", EndYr, "; Overall period: ", BeginYr, "-", EndYr, sep=""),
+#              y=.5, hjust=0.5, vjust=0.5, size=12)
+ggdraw(p2)
 
+OFName <- paste0(LocalDir, SiteID[i], "_Historical_Trends.png")
+ggsave(OFName, width=9, height=6, dpi=dpi,bg="white")
+}
