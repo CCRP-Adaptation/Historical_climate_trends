@@ -1,0 +1,378 @@
+﻿UNIT_CODE,UNIT_NAME,STATE,REGION
+TUIN,Tuskegee Institute National Historic Site,AL,SE
+HOBE,Horseshoe Bend National Military Park,AL,SE
+NATR,Natchez Trace Parkway,AL,SE
+LIRI,Little River Canyon National Preserve,AL,SE
+RUCA,Russell Cave National Monument,AL,SE
+TUAI,Tuskegee Airmen National Historic Site,AL,SE
+SEMO,Selma to Montgomery National Historic Trail,AL,SE
+BICR,Birmingham Civil Rights National Monument,AL,SE
+FRRI,Freedom Riders National Monument,AL,SE
+WICL,President William Jefferson Clinton Birthplace Home National Historic Site,AR,MW
+ARPO,Arkansas Post National Memorial,AR,MW
+HOSP,Hot Springs National Park,AR,MW
+CHSC,Little Rock Central High School National Historic Site,AR,MW
+FOSM,Fort Smith National Historic Site,AR,MW
+PERI,Pea Ridge National Military Park,AR,MW
+BUFF,Buffalo National River,AR,MW
+GLCA,Glen Canyon National Recreation Area,AZ,IM
+PISP,Pipe Spring National Monument,AZ,IM
+CACH,Canyon de Chelly National Monument,AZ,IM
+HUTR,Hubbell Trading Post National Historic Site,AZ,IM
+NAVA,Navajo National Monument,AZ,IM
+WACA,Walnut Canyon National Monument,AZ,IM
+SUCR,Sunset Crater Volcano National Monument,AZ,IM
+WUPA,Wupatki National Monument,AZ,IM
+GRCA,Grand Canyon National Park,AZ,IM
+LAKE,Lake Mead National Recreation Area,AZ,PW
+PEFO,Petrified Forest National Park,AZ,IM
+CAGR,Casa Grande Ruins National Monument,AZ,IM
+CHIR,Chiricahua National Monument,AZ,IM
+CORO,Coronado National Memorial,AZ,IM
+FOBO,Fort Bowie National Historic Site,AZ,IM
+MOCA,Montezuma Castle National Monument,AZ,IM
+ORPI,Organ Pipe Cactus National Monument,AZ,IM
+SAGU,Saguaro National Park,AZ,IM
+TONT,Tonto National Monument,AZ,IM
+TUMA,Tumacacori National Historical Park,AZ,IM
+TUZI,Tuzigoot National Monument,AZ,IM
+PIMA,Hohokam Pima National Monument,AZ,IM
+CHIS,Channel Islands National Park,CA,PW
+DEVA,Death Valley National Park,CA,PW
+GOGA,Golden Gate National Recreation Area,CA,PW
+EUON,Eugene O'Neill National Historic Site,CA,PW
+JOTR,Joshua Tree National Park,CA,PW
+MOJA,Mojave National Preserve,CA,PW
+LAVO,Lassen Volcanic National Park,CA,PW
+LABE,Lava Beds National Monument,CA,PW
+PINN,Pinnacles National Park,CA,PW
+REDW,Redwood National Park,CA,PW
+RORI,Rosie the Riveter/World War II Home Front National Historical Park,CA,PW
+JOMU,John Muir National Historic Site,CA,PW
+MUWO,Muir Woods National Monument,CA,PW
+PORE,Point Reyes National Seashore,CA,PW
+SAMO,Santa Monica Mountains National Recreation Area,CA,PW
+SEQU,Sequoia National Park,CA,PW
+KICA,Kings Canyon National Park,CA,PW
+DEPO,Devils Postpile National Monument,CA,PW
+WHIS,Whiskeytown-Shasta-Trinity National Recreation Area,CA,PW
+MANZ,Manzanar National Historic Site,CA,PW
+YOSE,Yosemite National Park,CA,PW
+CECH,César E. Chávez National Monument,CA,PW
+CAMO,Castle Mountains National Monument,CA,PW
+TULE,Tule Lake National Monument,CA,PW
+BLCA,Black Canyon of the Gunnison National Park,CO,IM
+COLM,Colorado National Monument,CO,IM
+CURE,Curecanti National Recreation Area,CO,IM
+DINO,Dinosaur National Monument,CO,IM
+SAND,Sand Creek Massacre National Historic Site,CO,IM
+GRSA,Great Sand Dunes National Park,CO,IM
+GRSA,Great Sand Dunes National Preserve,CO,IM
+MEVE,Mesa Verde National Park,CO,IM
+HOVE,Hovenweep National Monument,CO,IM
+YUHO,Yucca House National Monument,CO,IM
+ROMO,Rocky Mountain National Park,CO,IM
+BEOL,Bent's Old Fort National Historic Site,CO,IM
+FLFO,Florissant Fossil Beds National Monument,CO,IM
+CHIC,Chickasaw National Recreation Area,CO,IM
+WEFA,Weir Farm National Historical Park,CT,NE
+APPA,Appalachian National Scenic Trail,CT,NE
+NACA,National Capital Parks,DC,NC
+CHOH,Chesapeake and Ohio Canal National Historical Park,DC,NC
+BEPA,Belmont-Paul Women's Equality National Monument,DC,NC
+LYBA,Lyndon Baines Johnson Memorial Grove on the Potomac,DC,NC
+MALL,National Mall,DC,NC
+ROCR,Rock Creek Park,DC,NC
+PAAV,Pennsylvania Avenue National Historic Site,DC,NC
+MABE,Mary McLeod Bethune Council House National Historic Site,DC,NC
+THIS,Theodore Roosevelt Island,DC,NC
+WWII,World War II Memorial,DC,NC
+FRDE,Franklin Delano Roosevelt Memorial,DC,NC
+FOTH,Ford's Theatre National Historic Site,DC,NC
+JEFM,Thomas Jefferson Memorial,DC,NC
+LINC,Lincoln Memorial,DC,NC
+WAMO,Washington Monument,DC,NC
+KOWA,Korean War Veterans Memorial,DC,NC
+FRDO,Frederick Douglass National Historic Site,DC,NC
+CAWO,Carter G. Woodson Home National Historic Site,DC,NC
+VIVE,Vietnam Veterans Memorial,DC,NC
+COGA,Constitution Gardens,DC,NC
+WHHO,White House,DC,NC
+MLKM,"Martin Luther King, Jr., Memorial",DC,NC
+WWIM,World War I Memorial,DC,NC
+DDEM,Dwight D. Eisenhower Memorial,DC,NC
+FRST,First State National Historical Park,DE,NE
+BICY,Big Cypress National Preserve,FL,SE
+CANA,Canaveral National Seashore,FL,SE
+BISC,Biscayne National Park,FL,SE
+CASA,Castillo de San Marcos National Monument,FL,SE
+FOMA,Fort Matanzas National Monument,FL,SE
+EVER,Everglades National Park,FL,SE
+FOCA,Fort Caroline National Memorial,FL,SE
+GUIS,Gulf Islands National Seashore,FL,SE
+TIMU,Timucuan Ecological and Historic Preserve,FL,SE
+CHAT,Chattahoochee River National Recreation Area,GA,SE
+ANDE,Andersonville National Historic Site,GA,SE
+CHCH,Chickamauga and Chattanooga National Military Park,GA,SE
+FOFR,Fort Frederica National Monument,GA,SE
+FOPU,Fort Pulaski National Monument,GA,SE
+KEMO,Kennesaw Mountain National Battlefield Park,GA,SE
+OCMU,Ocmulgee Mounds National Historical Park,GA,SE
+CUIS,Cumberland Island National Seashore,GA,SE
+JICA,Jimmy Carter National Historical Park,GA,SE
+MALU,"Martin Luther King, Jr., National Historical Park",GA,SE
+EFMO,Effigy Mounds National Monument,IA,MW
+HEHO,Herbert Hoover National Historic Site,IA,MW
+YELL,Yellowstone National Park,ID,IM
+CRMO,Craters of the Moon National Monument,ID,PW
+CRMP,Craters of the Moon National Preserve,ID,PW
+MIIN,Minidoka National Historic Site,ID,PW
+NEPE,Nez Perce National Historical Park,ID,PW
+CIRO,City of Rocks National Reserve,ID,PW
+HAFO,Hagerman Fossil Beds National Monument,ID,PW
+LECL,Lewis and Clark National Historic Trail,IL,MW
+RRBH,Ronald Reagan Boyhood Home National Historic Site,IL,MW
+JEFF,Gateway Arch National Park,IL,MW
+LIHO,Lincoln Home National Historic Site,IL,MW
+PULL,Pullman National Monument,IL,MW
+INDU,Indiana Dunes National Park,IN,MW
+LIBO,Lincoln Boyhood National Memorial,IN,MW
+GERO,George Rogers Clark National Historical Park,IN,MW
+BRVB,Brown v. Board of Education National Historical Park,KS,MW
+FOLS,Fort Larned National Historic Site,KS,MW
+NICO,Nicodemus National Historic Site,KS,MW
+FOSC,Fort Scott National Historic Site,KS,MW
+TAPR,Tallgrass Prairie National Preserve,KS,MW
+BISO,Big South Fork National River and Recreation Area,KY,SE
+CUGA,Cumberland Gap National Historical Park,KY,SE
+FODO,Fort Donelson National Battlefield,KY,SE
+MACA,Mammoth Cave National Park,KY,SE
+ABLI,Abraham Lincoln Birthplace National Historical Park,KY,SE
+CANE,Camp Nelson National Monument,KY,SE
+MISP,Mill Springs Battlefield National Monument,KY,SE
+VICK,Vicksburg National Military Park,LA,SE
+CARI,Cane River Creole National Historical Park,LA,SE
+JAZZ,New Orleans Jazz National Historical Park,LA,SE
+JELA,Jean Lafitte National Historical Park and Preserve,LA,SE
+POPO,Poverty Point National Monument,LA,SE
+BLRV,Blackstone River Valley National Historical Park,MA,NE
+BOST,Boston National Historical Park,MA,NE
+SPAR,Springfield Armory National Historic Site,MA,NE
+ADAM,Adams National Historical Park,MA,NE
+JOFI,John Fitzgerald Kennedy National Historic Site,MA,NE
+MIMA,Minute Man National Historical Park,MA,NE
+SAMA,Salem Maritime National Historic Site,MA,NE
+SAIR,Saugus Iron Works National Historic Site,MA,NE
+CACO,Cape Cod National Seashore,MA,NE
+LONG,Longfellow House-Washington's Headquarters National Historic Site,MA,NE
+BOAF,Boston African American National Historic Site,MA,NE
+BOHA,Boston Harbor Islands National Recreation Area,MA,NE
+LOWE,Lowell National Historical Park,MA,NE
+NEBE,New Bedford Whaling National Historical Park,MA,NE
+FRLA,Frederick Law Olmsted National Historic Site,MA,NE
+GWMP,George Washington Memorial Parkway,MD,NC
+CAJO,Captain John Smith Chesapeake National Historic Trail,MD,NE
+CLBA,Clara Barton National Historic Site,MD,NC
+FOWA,Fort Washington Park,MD,NC
+GREE,Greenbelt Park,MD,NC
+ANTI,Antietam National Battlefield,MD,NC
+HAFE,Harpers Ferry National Historical Park,MD,NC
+CATO,Catoctin Mountain Park,MD,NC
+PISC,Piscataway Park,MD,NC
+MONO,Monocacy National Battlefield,MD,NC
+ASIS,Assateague Island National Seashore,MD,NE
+FOMC,Fort McHenry National Monument and Historic Shrine,MD,NE
+HAMP,Hampton National Historic Site,MD,NE
+THST,Thomas Stone National Historic Site,MD,NE
+HATU,Harriet Tubman Underground Railroad National Historical Park,MD,NE
+ACAD,Acadia National Park,ME,NE
+KAWW,Katahdin Woods and Waters National Monument,ME,NE
+KEWE,Keweenaw National Historical Park,MI,MW
+ISRO,Isle Royale National Park,MI,MW
+PIRO,Pictured Rocks National Lakeshore,MI,MW
+RIRA,River Raisin National Battlefield Park,MI,MW
+SLBE,Sleeping Bear Dunes National Lakeshore,MI,MW
+NOCO,North Country National Scenic Trail,MI,MW
+LOSA,Lower Saint Croix National Scenic Riverway,MN,MW
+GRPO,Grand Portage National Monument,MN,MW
+PIPE,Pipestone National Monument,MN,MW
+SACN,Saint Croix National Scenic Riverway,MN,MW
+MISS,Mississippi National River and Recreation Area,MN,MW
+VOYA,Voyageurs National Park,MN,MW
+GWCA,George Washington Carver National Monument,MO,MW
+WICR,Wilson's Creek National Battlefield,MO,MW
+HSTR,Harry S Truman National Historic Site,MO,MW
+OZAR,Ozark National Scenic Riverways,MO,MW
+ULSG,Ulysses S. Grant National Historic Site,MO,MW
+STGE,Ste. Genevieve National Historical Park,MO,MW
+BRCR,Brices Cross Roads National Battlefield Site,MS,SE
+TUPE,Tupelo National Battlefield,MS,SE
+SHIL,Shiloh National Military Park,MS,SE
+NATC,Natchez National Historical Park,MS,SE
+MEMY,Medgar and Myrlie Evers Home National Monument,MS,SE
+BICA,Bighorn Canyon National Recreation Area,MT,IM
+LIBI,Little Bighorn Battlefield National Monument,MT,IM
+GLAC,Glacier National Park,MT,IM
+FOUS,Fort Union Trading Post National Historic Site,MT,MW
+BIHO,Big Hole National Battlefield,MT,PW
+GRKO,Grant-Kohrs Ranch National Historic Site,MT,IM
+BLRI,Blue Ridge Parkway,NC,SE
+CARL,Carl Sandburg Home National Historic Site,NC,SE
+GUCO,Guilford Courthouse National Military Park,NC,SE
+WRBR,Wright Brothers National Memorial,NC,SE
+CAHA,Cape Hatteras National Seashore,NC,SE
+CALO,Cape Lookout National Seashore,NC,SE
+GRSM,Great Smoky Mountains National Park,NC,SE
+MOCR,Moores Creek National Battlefield,NC,SE
+KNRI,Knife River Indian Villages National Historic Site,ND,MW
+THRO,Theodore Roosevelt National Park,ND,MW
+MNRR,Missouri National Recreational River,NE,MW
+NIOB,Niobrara National Scenic River,NE,MW
+HOME,Homestead National Historical Park,NE,MW
+SCBL,Scotts Bluff National Monument,NE,MW
+AGFO,Agate Fossil Beds National Monument,NE,MW
+SAGA,Saint-Gaudens National Historical Park,NH,NE
+GATE,Gateway National Recreation Area,NJ,NE
+STLI,Statue of Liberty National Monument,NJ,NE
+EDIS,Thomas Edison National Historical Park,NJ,NE
+MORR,Morristown National Historical Park,NJ,NE
+DEWA,Delaware Water Gap National Recreation Area,NJ,NE
+DELA,Middle Delaware National Scenic River,NJ,NE
+PAGR,Paterson Great Falls National Historical Park,NJ,NE
+BAND,Bandelier National Monument,NM,IM
+CAVO,Capulin Volcano National Monument,NM,IM
+CAVE,Carlsbad Caverns National Park,NM,IM
+FOUN,Fort Union National Monument,NM,IM
+GICL,Gila Cliff Dwellings National Monument,NM,IM
+SAPU,Salinas Pueblo Missions National Monument,NM,IM
+AZRU,Aztec Ruins National Monument,NM,IM
+CHCU,Chaco Culture National Historical Park,NM,IM
+ELMO,El Morro National Monument,NM,IM
+PECO,Pecos National Historical Park,NM,IM
+PETR,Petroglyph National Monument,NM,IM
+WHSA,White Sands National Park,NM,IM
+ELMA,El Malpais National Monument,NM,IM
+VALL,Valles Caldera National Preserve,NM,IM
+MAPR,Manhattan Project National Historical Park,NM,IM
+GRBA,Great Basin National Park,NV,PW
+TUSK,Tule Springs Fossil Beds National Monument,NV,PW
+MAVA,Martin Van Buren National Historic Site,NY,NE
+ELRO,Eleanor Roosevelt National Historic Site,NY,NE
+SAPA,Saint Paul's Church National Historic Site,NY,NE
+THRI,Theodore Roosevelt Inaugural National Historic Site,NY,NE
+FOST,Fort Stanwix National Monument,NY,NE
+FIIS,Fire Island National Seashore,NY,NE
+HOFR,Home of Franklin D. Roosevelt National Historic Site,NY,NE
+VAMA,Vanderbilt Mansion National Historic Site,NY,NE
+SARA,Saratoga National Historical Park,NY,NE
+THRB,Theodore Roosevelt Birthplace National Historic Site,NY,NE
+CACL,Castle Clinton National Monument,NY,NE
+FEHA,Federal Hall National Memorial,NY,NE
+GEGR,General Grant National Memorial,NY,NE
+HAGR,Hamilton Grange National Memorial,NY,NE
+SAHI,Sagamore Hill National Historic Site,NY,NE
+AFBG,African Burial Ground National Monument,NY,NE
+WORI,Women's Rights National Historical Park,NY,NE
+UPDE,Upper Delaware Scenic and Recreational River,NY,NE
+HART,Harriet Tubman National Historical Park,NY,NE
+STON,Stonewall National Monument,NY,NE
+CUVA,Cuyahoga Valley National Park,OH,MW
+FILA,First Ladies National Historic Site,OH,MW
+DAAV,Dayton Aviation Heritage National Historical Park,OH,MW
+JAGA,James A. Garfield National Historic Site,OH,MW
+HOCU,Hopewell Culture National Historical Park,OH,MW
+WIHO,William Howard Taft National Historic Site,OH,MW
+CHYO,Charles Young Buffalo Soldiers National Monument,OH,MW
+WABA,Washita Battlefield National Historic Site,OK,IM
+JODA,John Day Fossil Beds National Monument,OR,PW
+CRLA,Crater Lake National Park,OR,PW
+ORCA,Oregon Caves National Monument and Preserve,OR,PW
+LEWI,Lewis and Clark National Historical Park,OR,PW
+FOVA,Fort Vancouver National Historic Site,OR,PW
+FLNI,Flight 93 National Memorial,PA,NE
+ALPO,Allegheny Portage Railroad National Historic Site,PA,NE
+FONE,Fort Necessity National Battlefield,PA,NE
+JOFL,Johnstown Flood National Memorial,PA,NE
+EDAL,Edgar Allan Poe National Historic Site,PA,NE
+FRHI,Friendship Hill National Historic Site,PA,NE
+GETT,Gettysburg National Military Park,PA,NE
+EISE,Eisenhower National Historic Site,PA,NE
+HOFU,Hopewell Furnace National Historic Site,PA,NE
+INDE,Independence National Historical Park,PA,NE
+THKO,Thaddeus Kosciuszko National Memorial,PA,NE
+STEA,Steamtown National Historic Site,PA,NE
+VAFO,Valley Forge National Historical Park,PA,NE
+ROWI,Roger Williams National Memorial,RI,NE
+CONG,Congaree National Park,SC,SE
+KIMO,Kings Mountain National Military Park,SC,SE
+COWP,Cowpens National Battlefield,SC,SE
+NISI,Ninety Six National Historic Site,SC,SE
+CHPI,Charles Pinckney National Historic Site,SC,SE
+REER,Reconstruction Era National Historical Park,SC,SE
+BADL,Badlands National Park,SD,MW
+MORU,Mount Rushmore National Memorial,SD,MW
+WICA,Wind Cave National Park,SD,MW
+JECA,Jewel Cave National Monument,SD,MW
+MIMI,Minuteman Missile National Historic Site,SD,MW
+ANJO,Andrew Johnson National Historic Site,TN,SE
+STRI,Stones River National Battlefield,TN,SE
+OBRI,Obed Wild and Scenic River,TN,SE
+BITH,Big Thicket National Preserve,TX,IM
+AMIS,Amistad National Recreation Area,TX,IM
+BIBE,Big Bend National Park,TX,IM
+GUMO,Guadalupe Mountains National Park,TX,IM
+CHAM,Chamizal National Memorial,TX,IM
+FODA,Fort Davis National Historic Site,TX,IM
+LYJO,Lyndon B. Johnson National Historical Park,TX,IM
+PAIS,Padre Island National Seashore,TX,IM
+LAMR,Lake Meredith National Recreation Area,TX,IM
+ALFL,Alibates Flint Quarries National Monument,TX,IM
+RIGR,Rio Grande Wild and Scenic River,TX,IM
+SAAN,San Antonio Missions National Historical Park,TX,IM
+PAAL,Palo Alto Battlefield National Historical Park,TX,IM
+WACO,Waco Mammoth National Monument,TX,IM
+CARE,Capitol Reef National Park,UT,IM
+CANY,Canyonlands National Park,UT,IM
+ARCH,Arches National Park,UT,IM
+NABR,Natural Bridges National Monument,UT,IM
+RABR,Rainbow Bridge National Monument,UT,IM
+GOSP,Golden Spike National Historical Park,UT,IM
+BRCA,Bryce Canyon National Park,UT,IM
+CEBR,Cedar Breaks National Monument,UT,IM
+ZION,Zion National Park,UT,IM
+TICA,Timpanogos Cave National Monument,UT,IM
+ARHO,"Arlington House, The Robert E. Lee Memorial",VA,NC
+MANA,Manassas National Battlefield Park,VA,NC
+PRWI,Prince William Forest Park,VA,NC
+WOTR,Wolf Trap National Park for the Performing Arts,VA,NC
+APCO,Appomattox Court House National Historical Park,VA,NE
+BOWA,Booker T. Washington National Monument,VA,NE
+CEBE,Cedar Creek and Belle Grove National Historical Park,VA,NE
+COLO,Colonial National Historical Park,VA,NE
+FRSP,Fredericksburg and Spotsylvania County Battlefields Memorial National Military Park,VA,NE
+GEWA,George Washington Birthplace National Monument,VA,NE
+PETE,Petersburg National Battlefield,VA,NE
+MAWA,Maggie L. Walker National Historic Site,VA,NE
+RICH,Richmond National Battlefield Park,VA,NE
+SHEN,Shenandoah National Park,VA,NE
+FOMR,Fort Monroe National Monument,VA,NE
+MABI,Marsh-Billings-Rockefeller National Historical Park,VT,NE
+LARO,Lake Roosevelt National Recreation Area,WA,PW
+EBLA,Ebey's Landing National Historical Reserve,WA,PW
+MORA,Mount Rainier National Park,WA,PW
+NOCA,North Cascades National Park,WA,PW
+LACH,Lake Chelan National Recreation Area,WA,PW
+ROLA,Ross Lake National Recreation Area,WA,PW
+OLYM,Olympic National Park,WA,PW
+SAJH,San Juan Island National Historical Park,WA,PW
+WHMI,Whitman Mission National Historic Site,WA,PW
+APIS,Apostle Islands National Lakeshore,WI,MW
+IATR,Ice Age National Scenic Trail,WI,MW
+BLUE,Bluestone National Scenic River,WV,NE
+GARI,Gauley River National Recreation Area,WV,NE
+NERI,New River Gorge National Park and Preserve,WV,NE
+DETO,Devils Tower National Monument,WY,IM
+FOLA,Fort Laramie National Historic Site,WY,IM
+GRTE,Grand Teton National Park,WY,IM
+JODR,"John D. Rockefeller, Jr., Memorial Parkway",WY,IM
+FOBU,Fossil Butte National Monument,WY,IM
