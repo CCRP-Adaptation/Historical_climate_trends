@@ -5,18 +5,13 @@ library(gridExtra); library(SPEI); library(tidyr); library(tibble); library(sp);
 library(terra) #https://tmieno2.github.io/R-as-GIS-for-Economists/extracting-values-from-raster-layers-for-vector-data.html
 rm(list=ls())
 
-SiteID = c("CAVE","GUMO") 
+centroids <- tibble(read.csv(here::here("NPS_CONUS.csv")))
+SiteID = centroids$UNIT_CODE
 
 centroid_county <- read.csv(here::here("centroid_county.csv"))
 BeginYr = 1895
 EndYr = 2022
 
-county_climate <- "N"
-point_climate <- "Y"
-
-doP1 <- "YES"  # Should a separate regression be calculated for the reference period (default 1900-1970)? 
-doP2 <- "YES"  # Should a separate regression be calculate for the period after the reference period (default 1971-present)? 
-beginRefYr = 1900
 endRefYr = 1970
 # needed for rolling mean plot below.  
 stepYrs	= 10		  # for period plots 
@@ -83,32 +78,6 @@ PlotTheme = theme_gray() %+replace%
 theme_set(PlotTheme)
 TitleSize = theme_get()$plot.title$size  ##Needed for cowplot layouts
 
-
-##########################
-#Regressions for trends----
-# lmTmax <- lmrob(yrAvgs$tmaxAvg~cYr)
-# lmTmaxP1 <- lmrob(yrAvgs$tmaxP1~cYr)
-# lmTmaxP2 <- lmrob(yrAvgs$tmaxP2~cYr)
-# 
-# lmTmin <- lmrob(yrAvgs$tminAvg~cYr)
-# lmTminP1 <- lmrob(yrAvgs$tminP1~cYr)
-# lmTminP2 <- lmrob(yrAvgs$tminP2~cYr)
-
-lmTmean <- lmrob(TavgF~Year,Annual)
-lmTmeanP2 <- lmrob(TavgP2~Year,Annual)
-
-lmPpt  <- lmrob(PptIn~Year,Annual)		
-lmPptP2 <- lmrob(PptP2~Year,Annual)		
-
-# make table of coefficients
-probStar <- function(pVal){
-  probStar <- "NS"
-  if(pVal < 0.05)probStar <- "*"
-  if(pVal < 0.01)probStar <- "**"
-  if(pVal < 0.001)probStar <- "***"
-  probStar
-}
-
 lmMetrics <- function(lmout){
   s <- summary(lmout)
   # equ <- as.character(s$call)
@@ -122,29 +91,55 @@ lmMetrics <- function(lmout){
   data.frame(YrCoeff,seSlope,probCoeff, probSign, r2)
 }
 
-# regsTmax <-  rbind(lmMetrics(lmTmax), lmMetrics(lmTmaxP1), lmMetrics(lmTmaxP2))
-# regsTmin <-  rbind(lmMetrics(lmTmin), lmMetrics(lmTminP1), lmMetrics(lmTminP2))
-regsTmean <- rbind(lmMetrics(lmTmean),lmMetrics(lmTmeanP2))
-regsPpt <-   rbind(lmMetrics(lmPpt),lmMetrics(lmPptP2))
-
-perAll <- paste(min(Annual$Year), max(Annual$Year), sep="-")
-per2 <- paste(endRefYr, max(Annual$Year), sep="-")
-Period <- rep(c(perAll, per2), 2)
-
-lmTable <- cbind( Var=rep(c("Tmean", "Precip"),each=2), Period, rbind(regsTmean, regsPpt))
-
-lmTable$YrCoeff <- lmTable$YrCoeff * 100   # convert to degF(in)/100-yrs
-lmTable$seSlope <- lmTable$seSlope * 100
-#add units to YrCoeff field
-colnames(lmTable) <- c("Var", "Period", "YrCoeff(degF(in)/100yrs)", "seSlope", "probCoeff", "probSign", "r2")
-
-print(lmTable, row.names = F)
-
-write.csv(lmTable, paste0(LocalDir, "Regression Table.csv"), row.names=FALSE)
-write.csv(Annual, paste0(LocalDir, "Annual-Averages.csv"),row.names=FALSE)
-
+##########################
 PlotName = "Annual Means Lines Regressions"
-for(i in 1:length(SiteID)){
+for(i in i:length(SiteID)){
+A <- Annual |> filter(ID == SiteID[i])
+  #Regressions for trends----
+  # lmTmax <- lmrob(yrAvgs$tmaxAvg~cYr)
+  # lmTmaxP1 <- lmrob(yrAvgs$tmaxP1~cYr)
+  # lmTmaxP2 <- lmrob(yrAvgs$tmaxP2~cYr)
+  #
+  # lmTmin <- lmrob(yrAvgs$tminAvg~cYr)
+  # lmTminP1 <- lmrob(yrAvgs$tminP1~cYr)
+  # lmTminP2 <- lmrob(yrAvgs$tminP2~cYr)
+  
+  lmTmean <- lmrob(TavgF~Year,A)
+  lmTmeanP2 <- lmrob(TavgP2~Year,A)
+  
+  lmPpt  <- lmrob(PptIn~Year,A)
+  lmPptP2 <- lmrob(PptP2~Year,A)
+  
+  # make table of coefficients
+  probStar <- function(pVal){
+    probStar <- "NS"
+    if(pVal < 0.05)probStar <- "*"
+    if(pVal < 0.01)probStar <- "**"
+    if(pVal < 0.001)probStar <- "***"
+    probStar
+  }
+  
+  # regsTmax <-  rbind(lmMetrics(lmTmax), lmMetrics(lmTmaxP1), lmMetrics(lmTmaxP2))
+  # regsTmin <-  rbind(lmMetrics(lmTmin), lmMetrics(lmTminP1), lmMetrics(lmTminP2))
+  regsTmean <- rbind(lmMetrics(lmTmean),lmMetrics(lmTmeanP2))
+  regsPpt <-   rbind(lmMetrics(lmPpt),lmMetrics(lmPptP2))
+  
+  perAll <- paste(min(Annual$Year), max(Annual$Year), sep="-")
+  per2 <- paste(endRefYr, max(Annual$Year), sep="-")
+  Period <- rep(c(perAll, per2), 2)
+  
+  lmTable <- cbind( Var=rep(c("Tmean", "Precip"),each=2), Period, rbind(regsTmean, regsPpt))
+  
+  lmTable$YrCoeff <- lmTable$YrCoeff * 100   # convert to degF(in)/100-yrs
+  lmTable$seSlope <- lmTable$seSlope * 100
+  #add units to YrCoeff field
+  colnames(lmTable) <- c("Var", "Period", "YrCoeff(degF(in)/100yrs)", "seSlope", "probCoeff", "probSign", "r2")
+  
+  print(lmTable, row.names = F)
+  
+  write.csv(lmTable, paste0(LocalDir, SiteID[i],"-Regression Table.csv"), row.names=FALSE)
+  # write.csv(Annual, paste0(LocalDir, SiteID[i],"-Annual-Averages.csv"),row.names=FALSE)  
+  
 a <- Annual |> filter(ID==SiteID[i]) |> 
   ggplot() + geom_line(aes(Year, TavgF), na.rm=TRUE) + geom_point(aes(Year, TavgF), na.rm=TRUE) +
   ylab(expression(paste("Avg Temperature", ~({}^o*F)))) + xlab("") +
