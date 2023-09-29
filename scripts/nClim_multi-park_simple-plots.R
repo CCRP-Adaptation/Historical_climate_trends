@@ -56,6 +56,7 @@ Annual = baseData |> group_by(ID,Year) |> summarise(PptIn = sum(PptIn),
                                                     TavgF = mean(TavgF))
 Annual$PptP2 <- ifelse(Annual$Year>=endRefYr, Annual$PptIn, NA)
 Annual$TavgP2  <- ifelse(Annual$Year>=endRefYr, Annual$TavgF, NA)
+write.csv(Annual, paste0(LocalDir,"Annual-Averages.csv"), row.names=FALSE)
 # Annual$Year <- Date(Annual$Year,format="%Y")
 
 #### Basic plot
@@ -94,6 +95,7 @@ lmMetrics <- function(lmout){
 ##########################
 PlotName = "Annual Means Lines Regressions"
 for(i in i:length(SiteID)){
+  SiteID=successful[i]
 A <- Annual |> filter(ID == SiteID[i])
   #Regressions for trends----
   # lmTmax <- lmrob(yrAvgs$tmaxAvg~cYr)
@@ -139,7 +141,28 @@ A <- Annual |> filter(ID == SiteID[i])
   
   write.csv(lmTable, paste0(LocalDir, SiteID[i],"-Regression Table.csv"), row.names=FALSE)
   # write.csv(Annual, paste0(LocalDir, SiteID[i],"-Annual-Averages.csv"),row.names=FALSE)  
-  
+ 
+  # ####### Identify anomalies ####
+  # 
+  # hist.tmean.98th <- quantile(A$TavgF[which(A$Year < 1995)], .98)
+  # hist.anomalies.tmean <- A$Year[which(A$TavgF > hist.tmean.98th & A$Year < 1995)] # Anomaly years, above 98th
+  # recent.percent.tmean.anomaly <- length(A$Year[which(A$TavgF > hist.tmean.98th & A$Year > 2000)])/
+  #   length(A$Year[which(A$Year > 2000)]) * 100 # Percent recent years above hist 98th
+  # 
+  # hist.above.prcp.98th <- quantile(A$PptIn[which(A$Year < 1995)], .98)
+  # hist.anomalies.above.prcp <- A$Year[which(A$PptIn > hist.above.prcp.98th & A$Year < 1995)] # Anomaly years, above 98th
+  # recent.percent.above.prcp.anomaly <- length(A$Year[which(A$PptIn > hist.above.prcp.98th & A$Year > 2000)])/
+  #   length(A$Year[which(A$Year > 2000)]) * 100 # Percent recent years above hist 98th
+  # 
+  # hist.below.prcp.98th <- quantile(A$PptIn[which(A$Year < 1995)], .02)
+  # hist.anomalies.below.prcp <- A$Year[which(A$PptIn < hist.below.prcp.98th & A$Year < 1995)] # Anomaly years, above 98th
+  # recent.percent.below.prcp.anomaly <- length(A$Year[which(A$PptIn < hist.below.prcp.98th & A$Year > 2000)])/
+  #   length(A$Year[which(A$Year > 2000)]) * 100 # Percent recent years above hist 98th
+  # 
+  # anomalies.table <- data.frame(hist.tmean.98th,hist.anomalies.tmean,recent.percent.tmean.anomaly,hist.above.prcp.98th,hist.anomalies.above.prcp, recent.percent.above.prcp.anomaly,
+  #                               hist.below.prcp.98th,hist.anomalies.below.prcp,recent.percent.below.prcp.anomaly)
+  # write.csv(anomalies.table, paste0(LocalDir,SiteID[i], "-Anomalies-table.csv"),row.names=FALSE)
+  # 
 a <- Annual |> filter(ID==SiteID[i]) |> 
   ggplot() + geom_line(aes(Year, TavgF), na.rm=TRUE) + geom_point(aes(Year, TavgF), na.rm=TRUE) +
   ylab(expression(paste("Avg Temperature", ~({}^o*F)))) + xlab("") +
@@ -176,4 +199,42 @@ ggdraw(p2)
 
 OFName <- paste0(LocalDir, SiteID[i], "_Historical_Trends.png")
 ggsave(OFName, width=9, height=6, dpi=dpi,bg="white")
+
+# 
+# ggplot(data=A) + geom_line(aes(Year, TavgF), na.rm=TRUE) + geom_point(aes(Year, TavgF), na.rm=TRUE) +
+#   ylab(expression(paste("Avg Temperature", ~({}^o*F)))) + xlab("") +
+#   # geom_text(aes(x=1895, y= 13.5, label = "B")) +
+#   geom_smooth(aes(Year, TavgF),se=F, method="lm", na.rm=TRUE,linetype=if(summary(lmTmean)$coefficients[2,4]<0.05) {
+#     1
+#   } else{2}) +
+#   # geom_line(aes(Year, rTmean), colour = 'brown', size=1) +
+#   scale_x_continuous(breaks=c(1900, 1920, 1940, 1960, 1980, 2000, 2020)) +
+#   geom_smooth(method = lm,se=F, aes(Year, TavgP2), na.rm=TRUE,colour="brown",linetype=if(summary(lmTmeanP2)$coefficients[2,4]<0.05){
+#     1
+#   } else{2}) +
+#   if(recent.percent.tmean.anomaly > 33) {
+#     geom_point(data = subset(A,Year %in% hist.anomalies.tmean),aes(x=Year, y=TavgF), shape=21, size=10, stroke=3, colour="brown") 
+#   }
+# 
+# title = ggdraw() + draw_label(paste(SiteID[i], " - Trends for Reference and Recent Historical Periods", sep=""), 
+#                               fontface="bold", size=TitleSize, vjust=0.5)
+# p1 = plot_grid(c, b, nrow=2, align="v")
+# p2 = plot_grid(title, p1, ncol=1, rel_heights = c(0.1, 1, 0.05)) 
+# # p3 = add_sub(p2, paste("Gray shaded area around regression lines = standard error of predicted y's \nReference period: ", beginRefYr, "-", endRefYr, "; Recent period: ", endRefYr+1, "-", EndYr, "; Overall period: ", BeginYr, "-", EndYr, sep=""),
+# #              y=.5, hjust=0.5, vjust=0.5, size=12)
+# ggdraw(p2)
+# 
+# OFName <- paste0(LocalDir, SiteID[i], "_Historical_Trends-Anomalies.png")
+# ggsave(OFName, width=9, height=6, dpi=dpi,bg="white")
 }
+
+file.list = list.files(path = LocalDir, pattern = '.png', full.names = TRUE)
+successful<- substr(sub('.*\\/', '', file.list), 1, 4)
+# not.successful <- subset(SiteID %in% successful)
+
+# (new <- centroids$UNIT_CODE[which(!centroids$UNIT_CODE %in% successful)])
+# new <-relist(sort(unlist(new)), new)
+
+
+
+
