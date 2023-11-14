@@ -257,7 +257,8 @@ df <- data.frame()
 for(i in 1:length(SiteID)){
   # SiteID=successful[i]
   A <- Annual |> filter(ID == SiteID[i])
-
+  if(anyNA(A$PptIn)) next
+  else{
 hist.tmean.98th <- quantile(A$TavgF[which(A$Year < 2000)], .98)
 hist.anomalies.tmean <- A$Year[which(A$TavgF > hist.tmean.98th & A$Year < 2000)] # Anomaly years, above 98th
 recent.percent.tmean.anomaly <- length(A$Year[which(A$TavgF > hist.tmean.98th & A$Year > 2000)])/
@@ -277,5 +278,6 @@ recent.percent.below.prcp.anomaly <- length(A$Year[which(A$PptIn < hist.below.pr
 anomalies.table <- data.frame(hist.tmean.98th,hist.anomalies.tmean,recent.percent.tmean.anomaly,hist.above.prcp.98th,hist.anomalies.above.prcp, recent.percent.above.prcp.anomaly,
                               hist.below.prcp.98th,hist.anomalies.below.prcp,recent.percent.below.prcp.anomaly,SiteID=SiteID[i])
 df<-rbind(df, anomalies.table)
+  } 
 }
 write.csv(df, paste0(LocalDir, "ALL-Anomalies-table.csv"),row.names=FALSE)
