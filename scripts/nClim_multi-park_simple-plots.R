@@ -22,11 +22,22 @@ Lon = centroid_county$Lon[which(centroid_county$UNIT_CODE %in% SiteID)]
 
 # DataDir <- "E:/nClimGrid_nc/"
 DataDir <- "C:/Users/arunyon/3D Objects/Local-files/NOAA-data/nclim_2302/"
-LocalDir <- "C:/Users/arunyon/3D Objects/Local-files/RCF_Testing/multi-park-historical/"
+LocalDir <- "C:/Users/arunyon/3D Objects/Local-files/RCF_Testing/multi-park-historical-v2/"
 
 nps_centroids <- st_read('C:/Users/arunyon/3D Objects/Local-files/Git-repos/CCRP_automated_climate_futures/data/general/spatial-data/nps_boundary_centroids/nps_boundary_centroids.shp')
 centroid <- filter(nps_centroids, UNIT_CODE %in% SiteID)
-centroid <- centroid[1]
+centroid <- centroid[2]
+
+# #Use this block for areas that are not in centroids file
+# LocalDir <- "C:/Users/arunyon/3D Objects/Local-files/RCF_Testing/FOMR-BLSC/"
+# SiteID <- c("FOMR", "BLSC")
+# DT <- data.table(
+#   UNIT_CODE=SiteID,
+#   latitude=c(37.472918, 30.305797),
+#   longitude=c(-76.322860, -104.022553))
+# c = st_as_sf(DT, coords = c("longitude", "latitude"),
+#                  crs = 4269, agr = "constant")
+# centroid=c
 
 file.list = list.files(path = DataDir, pattern = '.nc', full.names = TRUE)
 file.list = file.list[1:2] # just prcp and tavg
@@ -57,7 +68,9 @@ Annual = baseData |> group_by(ID,Year) |> summarise(PptIn = sum(PptIn),
 Annual$PptP2 <- ifelse(Annual$Year>=endRefYr, Annual$PptIn, NA)
 Annual$TavgP2  <- ifelse(Annual$Year>=endRefYr, Annual$TavgF, NA)
 write.csv(Annual, paste0(LocalDir,"Annual-Averages.csv"), row.names=FALSE)
-# Annual$Year <- Date(Annual$Year,format="%Y")
+
+# Annual <- read.csv(paste0(LocalDir,"Annual-Averages.csv"))
+# Annual$Year <- as.Date(as.character(Annual$Year), format = "%Y")
 
 #### Basic plot
 # Take out the fuzzy gray error bar shading for the blue lines.
@@ -94,8 +107,8 @@ lmMetrics <- function(lmout){
 
 ##########################
 PlotName = "Annual Means Lines Regressions"
-for(i in i:length(SiteID)){
-  SiteID=successful[i]
+for(i in 1:length(SiteID)){
+  # SiteID=SiteID[i]
 A <- Annual |> filter(ID == SiteID[i])
   #Regressions for trends----
   # lmTmax <- lmrob(yrAvgs$tmaxAvg~cYr)
@@ -228,13 +241,41 @@ ggsave(OFName, width=9, height=6, dpi=dpi,bg="white")
 # ggsave(OFName, width=9, height=6, dpi=dpi,bg="white")
 }
 
-file.list = list.files(path = LocalDir, pattern = '.png', full.names = TRUE)
-successful<- substr(sub('.*\\/', '', file.list), 1, 4)
+# file.list = list.files(path = LocalDir, pattern = '.png', full.names = TRUE)
+# successful<- substr(sub('.*\\/', '', file.list), 1, 4)
 # not.successful <- subset(SiteID %in% successful)
 
 # (new <- centroids$UNIT_CODE[which(!centroids$UNIT_CODE %in% successful)])
 # new <-relist(sort(unlist(new)), new)
 
 
+#### Update identification of anomalies from 2000
+####### Identify anomalies ####
 
+# Create one table for all parks
+df <- data.frame()
+for(i in 1:length(SiteID)){
+  # SiteID=successful[i]
+  A <- Annual |> filter(ID == SiteID[i])
 
+hist.tmean.98th <- quantile(A$TavgF[which(A$Year < 2000)], .98)
+hist.anomalies.tmean <- A$Year[which(A$TavgF > hist.tmean.98th & A$Year < 2000)] # Anomaly years, above 98th
+recent.percent.tmean.anomaly <- length(A$Year[which(A$TavgF > hist.tmean.98th & A$Year > 2000)])/
+  length(A$Year[which(A$Year > 2000)]) * 100 # Percent recent years above hist 98th
+
+hist.above.prcp.98th <- quantile(A$PptIn[which(A$Year < 2000)], .98)
+hist.anomalies.above.prcp <- A$Year[which(A$PptIn > hist.above.prcp.98th & A$Year < 2000)] # Anomaly years, above 98th
+recent.percent.above.prcp.anomaly <- length(A$Year[which(A$PptIn > hist.above.prcp.98th & A$Year > 2000)])/
+  length(A$Year[which(A$Year > 2000)]) * 100 # Percent recent years above hist 98th
+
+hist.below.prcp.98th <- quantile(A$PptIn[which(A$Year < 2000)], .02)
+hist.anomalies.below.prcp <- A$Year[which(A$PptIn < hist.below.prcp.98th & A$Year < 2000)] # Anomaly years, above 98th
+recent.percent.below.prcp.anomaly <- length(A$Year[which(A$PptIn < hist.below.prcp.98th & A$Year > 2000)])/
+  length(A$Year[which(A$Year > 2000)]) * 100 # Percent recent years above hist 98th
+
+#Add in SIteID as column
+anomalies.table <- data.frame(hist.tmean.98th,hist.anomalies.tmean,recent.percent.tmean.anomaly,hist.above.prcp.98th,hist.anomalies.above.prcp, recent.percent.above.prcp.anomaly,
+                              hist.below.prcp.98th,hist.anomalies.below.prcp,recent.percent.below.prcp.anomaly,SiteID=SiteID[i])
+df<-rbind(df, anomalies.table)
+}
+write.csv(df, paste0(LocalDir, "ALL-Anomalies-table.csv"),row.names=FALSE)
