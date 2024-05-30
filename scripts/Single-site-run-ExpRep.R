@@ -1,3 +1,60 @@
+
+library(here); library(plyr); # Use here::here when package lubridate is used
+library(plotrix); library(zoo); library(ggplot2); library(grid); library(cowplot); library(reshape2); library(raster); library(ncdf4); library(reshape2); library(WriteXLS); library(data.table); library(RColorBrewer); library(ggrepel); library(lubridate); library(dplyr); library(forcats); library(openxlsx); library(sf); library(raster); library(rgdal); library(R.utils); library(tmap); library(tmaptools); library(ggmap); library(ggspatial);
+library(gridExtra); library(SPEI); library(tidyr); library(tibble); library(sp); library(skimr); library(cft); library(stringr); library(ggpubr); library(lemon);library(rvest);library(tidyverse);library(XML);library(xml2);library(curl);library(tidync); library(viridis); library(robustbase)
+
+rm(list=ls())
+
+DataDir <- "C:/Users/arunyon/3D Objects/Local-files/NOAA-data/nclim_2405/"
+OutDir <- "C:/Users/arunyon/3D Objects/Local-files/RCF_Testing/MORA_27-Historical/"
+
+SiteID <- "MORA" #From Koppen #27 site
+Lat = 46.76514578
+Lon = -121.725976
+
+BeginYr = 1895
+EndYr = 2023
+beginRefYr = 1900
+endRefYr = 1970
+# needed for rolling mean plot below.  
+stepYrs	= 10		  # for period plots 
+rollLen = 10      # period of calc for rolling average; default 10 = decadal
+dpi = 600 
+
+file.list = list.files(path = DataDir, pattern = '.nc', full.names = TRUE)
+
+GetSeason <- function(DateVec){
+  seas <- as.character(rep(NA, length(DateVec)))
+  seas[which(format(DateVec,'%B') %in% c("December", "January", "February"))]<- "Winter"
+  seas[which(format(DateVec,'%B') %in% c("March", "April", "May"))]<- "Spring"
+  seas[which(format(DateVec,'%B') %in% c("June", "July", "August"))]<- "Summer"
+  seas[which(format(DateVec,'%B') %in% c("September", "October", "November"))]<- "Fall"
+  return(seas)
+}
+
+# Using Tidync
+for (i in 1:length(file.list)){
+  src <- tidync(file.list[i]) %>% 
+    hyper_filter(lat = lat <= c(Lat+0.05) & lat >= c(Lat-0.05)) %>% #subset to Lat/Lon
+    hyper_filter(lon = lon <= c(Lon +0.05) & lon >= c(Lon -0.05)) %>% #aggregate lat and lon
+    hyper_tibble() %>% 
+    mutate(Date = as.Date(time,origin = "1800-01-01")) %>% 
+    group_by(Date) %>% 
+    summarise_at(1,mean) 
+  if (i == 1){df<-src} else {df<-merge(df,src,by="Date")}
+}
+
+baseData <- df %>% mutate(PptIn = prcp/25.4,
+                          TmaxF = tmax * 9/5 + 32,
+                          TminF = tmin * 9/5 + 32, 
+                          TavgF = (TmaxF+TminF)/2,
+                          YearMon = paste0(year(Date),sprintf("%02d",month(Date))),
+                          Season = GetSeason(Date)) %>% 
+  filter(Date <= paste0(EndYr,"-12-01"))
+
+write.csv(baseData, (sprintf("%s%s_nClimGrid.csv", OutDir, SiteID)),row.names=FALSE)
+
+
 baseData$Date<- as.Date(baseData$Date,format="%Y-%m-%d")
 baseData$Year = as.integer(format(baseData$Date,format="%Y"))
 
@@ -86,7 +143,7 @@ PlotName = "Annual Means Lines Regressions"
   
   print(lmTable, row.names = F)
   
-  write.csv(lmTable, paste0(LocalDir, SiteID,"-Regression Table.csv"), row.names=FALSE)
+  write.csv(lmTable, paste0(OutDir, SiteID,"-Regression Table-ExposureReport.csv"), row.names=FALSE)
   # write.csv(Annual, paste0(LocalDir, SiteID[i],"-Annual-Averages.csv"),row.names=FALSE)  
   
   ####### Identify anomalies ####
@@ -173,4 +230,3 @@ PlotName = "Annual Means Lines Regressions"
   # 
   # OFName <- paste0(OutDir, SiteID[i], "_Historical_Trends-Anomalies.png")
   # ggsave(OFName, width=9, height=6, dpi=dpi,bg="white")
-}
