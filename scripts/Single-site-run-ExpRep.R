@@ -1,16 +1,20 @@
 
 library(here); library(plyr); # Use here::here when package lubridate is used
 library(plotrix); library(zoo); library(ggplot2); library(grid); library(cowplot); library(reshape2); library(raster); library(ncdf4); library(reshape2); library(WriteXLS); library(data.table); library(RColorBrewer); library(ggrepel); library(lubridate); library(dplyr); library(forcats); library(openxlsx); library(sf); library(raster); library(rgdal); library(R.utils); library(tmap); library(tmaptools); library(ggmap); library(ggspatial);
-library(gridExtra); library(SPEI); library(tidyr); library(tibble); library(sp); library(skimr); library(cft); library(stringr); library(ggpubr); library(lemon);library(rvest);library(tidyverse);library(XML);library(xml2);library(curl);library(tidync); library(viridis); library(robustbase)
+library(gridExtra); library(SPEI); library(tidyr); library(tibble); library(sp); library(skimr);  library(stringr); library(ggpubr); library(lemon);library(rvest);library(tidyverse);library(XML);library(xml2);library(curl);library(tidync); library(viridis); library(robustbase)
 
 rm(list=ls())
 
-DataDir <- "C:/Users/arunyon/3D Objects/Local-files/NOAA-data/nclim_2405/"
-OutDir <- "C:/Users/arunyon/3D Objects/Local-files/RCF_Testing/MORA_27-Historical/"
+SiteID <- "BLRV" #From Koppen #27 site
+Lat = 41.939028
+Lon = -71.431884
 
-SiteID <- "MORA" #From Koppen #27 site
-Lat = 46.76514578
-Lon = -121.725976
+DataDir <- "C:/Users/arunyon/3D Objects/Local-files/NOAA-data/nclim_2405/"
+# OutDir <- "C:/Users/arunyon/3D Objects/Local-files/RCF_Testing/OLYM-Quinault-Historical/"
+OutDir <- paste0("C:/Users/arunyon/OneDrive - DOI/CFs_For_Kaylin/Additional-sites/",SiteID,"-Historical/")
+if(dir.exists(OutDir) == FALSE){
+  dir.create(OutDir)
+}
 
 BeginYr = 1895
 EndYr = 2023
