@@ -15,7 +15,6 @@ vignettes/*.pdf
 *.utf8.md
 *.knit.md
 .Renviron
-
 .Rproj.user
 .Rhistory
 .RData
@@ -27,3 +26,4 @@ figures/
 data/general/spatial-data/
 data/park-specific/
 *.html
+NPS_centroids.csv
