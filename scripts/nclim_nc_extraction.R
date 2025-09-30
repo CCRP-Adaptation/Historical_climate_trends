@@ -37,3 +37,4 @@ write.csv(baseData, (sprintf("%s%s_nClimGrid.csv", OutDir, SiteID)),row.names=FA
 
 # how to extract for all CONUS sites: https://r-spatial.github.io/stars/reference/st_extract.html
 
+

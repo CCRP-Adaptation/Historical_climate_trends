@@ -15,17 +15,17 @@ knitr::opts_chunk$set(
 
 
 library(here); library(plyr); # Use here::here when package lubridate is used
-library(plotrix); library(zoo); library(ggplot2); library(grid); library(cowplot); library(reshape2); library(raster); library(ncdf4); library(reshape2); library(WriteXLS); library(data.table); library(RColorBrewer); library(ggrepel); library(lubridate); library(dplyr); library(forcats); library(openxlsx); library(sf); library(raster); library(rgdal); library(R.utils); library(tmap); library(tmaptools); library(ggmap); library(ggspatial);
+library(plotrix); library(zoo); library(ggplot2); library(grid); library(cowplot); library(reshape2); library(raster); library(ncdf4); library(reshape2); library(WriteXLS); library(data.table); library(RColorBrewer); library(ggrepel); library(lubridate); library(dplyr); library(forcats); library(openxlsx); library(sf); library(raster); library(R.utils); library(tmap); library(tmaptools); library(ggmap); library(ggspatial);
 library(gridExtra); library(SPEI); library(tidyr); library(tibble); library(sp); library(skimr); library(stringr); library(ggpubr); library(lemon);library(rvest);library(tidyverse);library(XML);library(xml2);library(curl);library(tidync); library(viridis); library(robustbase)
 
 rm(list = ls())
 
 # -------------- Input site information -------------------------------------- #
 
-SiteID = "GRSM" 
+SiteID = "CAHA" 
 centroid_county <- read.csv(here::here("centroid_county.csv"))
 BeginYr = 1895
-EndYr = 2023
+EndYr = 2024
 
 county_climate <- "N"
 point_climate <- "Y"
@@ -40,12 +40,12 @@ rollLen = 10      # period of calc for rolling average; default 10 = decadal
 dpi = 600 
 Lat = centroid_county$Lat[which(centroid_county$UNIT_CODE==SiteID)]
 Lon = centroid_county$Lon[which(centroid_county$UNIT_CODE==SiteID)]
-Lat = 35.622148
-Lon = -83.49809584
+Lat = 35.2677
+Lon = -75.5258
 
 # DataDir <- "E:/nClimGrid_nc/"
-DataDir <- "C:/Users/arunyon/3D Objects/Local-files/NOAA-data/nclim_2405/"
-LocalDir <- "C:/Users/arunyon/3D Objects/Local-files/RCF_Testing/"
+DataDir <- "E:/nClimGrid_nc/"
+LocalDir <- "C:/Users/arunyon/DOI/CCRP COLLABORATE! - CCRP COLLABORATE!/01 PROJECT Collaboration/Science, Adaptation, Planning/Resource Stewardship Strategies (RSS)/Current Park Folders/2025_CAHA/CAHA-Historical/"
 
 if(county_climate == "Y") {
   OutDir = paste0(LocalDir,SiteID,"-Historical-County","/") # for .csv's

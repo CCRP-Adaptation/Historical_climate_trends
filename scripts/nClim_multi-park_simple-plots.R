@@ -1,6 +1,6 @@
 
 library(here); library(plyr); # Use here::here when package lubridate is used
-library(plotrix); library(zoo); library(ggplot2); library(grid); library(cowplot); library(reshape2); library(raster); library(ncdf4); library(reshape2); library(WriteXLS); library(data.table); library(RColorBrewer); library(ggrepel); library(lubridate); library(dplyr); library(forcats); library(openxlsx); library(sf); library(raster); library(rgdal); library(R.utils); library(tmap); library(tmaptools); library(ggmap); library(ggspatial);
+library(plotrix); library(zoo); library(ggplot2); library(grid); library(cowplot); library(reshape2); library(raster); library(ncdf4); library(reshape2); library(WriteXLS); library(data.table); library(RColorBrewer); library(ggrepel); library(lubridate); library(dplyr); library(forcats); library(openxlsx); library(sf); library(raster); library(R.utils); library(tmap); library(tmaptools); library(ggmap); library(ggspatial);
 library(gridExtra); library(SPEI); library(tidyr); library(tibble); library(sp); library(skimr);  library(stringr); library(ggpubr); library(lemon);library(rvest);library(tidyverse);library(XML);library(xml2);library(curl);library(tidync); library(viridis); library(robustbase)
 library(terra) #https://tmieno2.github.io/R-as-GIS-for-Economists/extracting-values-from-raster-layers-for-vector-data.html
 rm(list=ls())
@@ -9,8 +9,8 @@ centroids <- tibble(read.csv(here::here("NPS_CONUS.csv")))
 SiteID = centroids$UNIT_CODE
 
 centroid_county <- read.csv(here::here("centroid_county.csv"))
-BeginYr = 1895
-EndYr = 2022
+BeginYr = 2023
+EndYr = 2024
 
 endRefYr = 1970
 # needed for rolling mean plot below.  
@@ -20,13 +20,16 @@ dpi = 600
 Lat = centroid_county$Lat[which(centroid_county$UNIT_CODE %in% SiteID)]
 Lon = centroid_county$Lon[which(centroid_county$UNIT_CODE %in% SiteID)]
 
-# DataDir <- "E:/nClimGrid_nc/"
+DataDir <- "E:/nClimGrid_nc/"
 DataDir <- "C:/Users/arunyon/3D Objects/Local-files/NOAA-data/nclim_2302/"
 LocalDir <- "C:/Users/arunyon/3D Objects/Local-files/RCF_Testing/multi-park-historical-v2/"
 
 nps_centroids <- st_read('C:/Users/arunyon/3D Objects/Local-files/Git-repos/CCRP_automated_climate_futures/data/general/spatial-data/nps_boundary_centroids/nps_boundary_centroids.shp')
+nps_centroids = st_read("C:/Users/arunyon/OneDrive - DOI/Documents/GIS/nps_boundary_centroids_2023/nps_boundary_centroids.shp")
+
 centroid <- filter(nps_centroids, UNIT_CODE %in% SiteID)
 centroid <- centroid[2]
+centroid = st_transform(centroid, crs = 4326)
 
 # #Use this block for areas that are not in centroids file
 # LocalDir <- "C:/Users/arunyon/3D Objects/Local-files/RCF_Testing/FOMR-BLSC/"
@@ -45,11 +48,13 @@ file.list = file.list[1:2] # just prcp and tavg
 nc.data <- data.frame()
 for (i in 1:length(file.list)){
 raster.obj = terra::rast(file.list[i])
+
 raster.extract<-terra::extract(raster.obj, vect(centroid))
 raster.extract$ID <- centroid$UNIT_CODE
 colnames(raster.extract)[2:length(raster.extract)] = as.character(time(raster.obj))
 raster.extract <- raster.extract |> 
-  pivot_longer(!ID, names_to = "Date", values_to = substr(file.list[i], 72, 75)) #numbers correspond with vector length, if filename changes need to update
+  # pivot_longer(!ID, names_to = "Date", values_to = substr(file.list[i], 72, 75)) #numbers correspond with vector length, if filename changes need to update
+  pivot_longer(!ID, names_to = "Date", values_to = substr(file.list[i], 27, 30)) 
 if(i==1){nc.data=raster.extract} else{nc.data=left_join(nc.data,raster.extract,by=c("ID","Date"))}
 }
 
